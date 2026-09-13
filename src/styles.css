@@ -1757,11 +1757,18 @@ img{content-visibility:auto}
 .work-reel-next:hover:after{width:100%}
 .work-reel-next:hover b{transform:translateY(3px);color:#ff8cd5}
 .work-reel-next:disabled{opacity:.18;pointer-events:none}
+.work-reel-next:not(:disabled){animation:nextProjectBreath 3.8s ease-in-out infinite}
+.work-reel-next:not(:disabled) b{color:#8dd5ff;text-shadow:0 0 12px rgba(141,213,255,.65)}
+.work-reel-next:not(:disabled):hover b{color:#ff8cd5}
+.work-reel-sticky.is-changing .work-card[data-state="current"] .work-card-shell,
+.work-reel-sticky.is-changing .work-card[data-state="next"] .work-card-shell{animation:projectHandoff .56s cubic-bezier(.16,1,.3,1)}
+@keyframes nextProjectBreath{50%{border-color:rgba(255,107,199,.58);box-shadow:0 14px 34px rgba(0,0,0,.24),0 0 18px rgba(121,191,255,.14)}}
+@keyframes projectHandoff{0%{filter:brightness(1.12)}45%{filter:brightness(.96)}100%{filter:brightness(1)}}
 @media(max-width:800px){
   .work-reel-next{right:16px;bottom:18px;min-height:40px;gap:9px;padding-left:11px;font-size:7px;backdrop-filter:none;-webkit-backdrop-filter:none}
   .work-reel-next b{width:25px;height:25px;font-size:20px}
 }
-@media(prefers-reduced-motion:reduce){.work-reel-next{transition:none!important}.work-reel-next:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){.work-reel-next,.work-reel-sticky.is-changing .work-card-shell{transition:none!important;animation:none!important}.work-reel-next:hover{transform:none}}
 
 /* Mobile smoothness pass: preserve motion while keeping the compositor light. */
 @media(max-width:800px){

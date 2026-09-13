@@ -88,6 +88,10 @@ export default function Home(){
      const raw=progress*Math.max(0,cards.length-1);
      const current=Math.min(cards.length-1,Math.round(raw));
      if(current>=cards.length-1) return;
+     sticky.classList.remove('is-changing');
+     void sticky.offsetWidth;
+     sticky.classList.add('is-changing');
+     window.setTimeout(()=>sticky.classList.remove('is-changing'),560);
      const reelTop=window.scrollY+rect.top;
      const targetProgress=(current+1)/Math.max(1,cards.length-1);
      window.scrollTo({top:reelTop+(travel*targetProgress),behavior:'smooth'});
