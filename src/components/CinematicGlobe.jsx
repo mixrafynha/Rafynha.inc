@@ -8,12 +8,6 @@ const TEXTURES = {
   clouds: 'https://clouds.matteason.co.uk/images/2048x1024/clouds.jpg',
 };
 
-const MOBILE_TEXTURES = {
-  day: 'https://clouds.matteason.co.uk/images/2048x1024/earth.jpg',
-  night: 'https://clouds.matteason.co.uk/images/2048x1024/earth-night.jpg',
-  clouds: 'https://clouds.matteason.co.uk/images/1024x512/clouds.jpg',
-};
-
 const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const smooth = (t) => t * t * (3 - 2 * t);
 
@@ -22,7 +16,7 @@ export default function CinematicGlobe() {
 
   useEffect(() => {
     let disposed = false;
-    let renderer, scene, camera, globeGroup, earth, clouds, atmosphere, stars, moon, dataRig, meteorRig, cityLights;
+    let renderer, scene, camera, globeGroup, earth, clouds, atmosphere, stars, moon, dataRig, meteorRig;
     let frame = 0;
     let targetP = 0;
     let currentP = 0;
@@ -35,10 +29,6 @@ export default function CinematicGlobe() {
     const mount = mountRef.current;
     const hero = mount?.closest('.space-hero');
     if (!mount || !hero) return;
-    // The home hero can use the supplied cinematic reference as the exact
-    // visual source; in that mode the scroll animation is CSS-driven and we
-    // skip WebGL entirely so the image stays crisp and mobile stays light.
-    if (hero.classList.contains('reference-globe-mode')) return;
 
     const readScroll = () => {
       const r = hero.getBoundingClientRect();
@@ -54,17 +44,8 @@ export default function CinematicGlobe() {
       pointerY = (e.clientY / window.innerHeight - 0.5) * 2;
     };
 
-    const mobileViewport = window.innerWidth < 780;
-    let scrollFrame = 0;
-    const onScroll = () => {
-      if (scrollFrame) return;
-      scrollFrame = requestAnimationFrame(() => {
-        scrollFrame = 0;
-        readScroll();
-      });
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    if (!mobileViewport) window.addEventListener('pointermove', onPointer, { passive: true });
+    window.addEventListener('scroll', readScroll, { passive: true });
+    window.addEventListener('pointermove', onPointer, { passive: true });
     readScroll();
 
     (async () => {
@@ -95,11 +76,10 @@ export default function CinematicGlobe() {
 
       const loader = new THREE.TextureLoader();
       loader.setCrossOrigin('anonymous');
-      const textureSet = mobile ? MOBILE_TEXTURES : TEXTURES;
       const [dayTex, nightTex, cloudTex] = await Promise.all([
-        loader.loadAsync(textureSet.day),
-        loader.loadAsync(textureSet.night),
-        loader.loadAsync(textureSet.clouds),
+        loader.loadAsync(TEXTURES.day),
+        loader.loadAsync(TEXTURES.night),
+        loader.loadAsync(TEXTURES.clouds),
       ]);
       if (disposed) return;
 
@@ -133,7 +113,6 @@ export default function CinematicGlobe() {
         cloudMap: { value: cloudTex },
         sunDirection: { value: sunDirection },
         storyProgress: { value: 0 },
-        time: { value: 0 },
       };
 
       const earthMat = new THREE.ShaderMaterial({
@@ -156,7 +135,6 @@ export default function CinematicGlobe() {
           uniform sampler2D cloudMap;
           uniform vec3 sunDirection;
           uniform float storyProgress;
-          uniform float time;
           varying vec2 vUv;
           varying vec3 vWorldNormal;
           varying vec3 vWorldPosition;
@@ -190,13 +168,10 @@ export default function CinematicGlobe() {
             dayLit += vec3(1.0, 0.82, 0.60) * spec * 1.55;
             dayLit += vec3(0.035, 0.08, 0.13) * grazing * oceanMask * 0.45;
 
-            // City lights wake as each part of the rotating globe crosses
-            // the terminator, rather than looking permanently printed on it.
-            float nightMask = 1.0 - smoothstep(-0.26, 0.12, ndl);
-            float cityWake = smoothstep(0.02, 0.62, nightMask);
-            float cityPulse = 0.94 + 0.06 * sin(time * 2.2 + vUv.x * 52.0 + vUv.y * 17.0);
-            vec3 cityColor = night * vec3(1.12, 0.68, 0.28) * 2.35 * cityWake * cityPulse;
-            vec3 nightLit = cityColor + day * 0.012;
+            // City lights stay restrained and only appear on the true night side.
+            vec3 cityColor = night * vec3(1.05, 0.72, 0.38) * 1.55;
+            float nightMask = 1.0 - smoothstep(-0.19, 0.08, ndl);
+            vec3 nightLit = cityColor * nightMask + day * 0.018;
 
             vec3 col = mix(nightLit, dayLit, dayAmt);
 
@@ -225,67 +200,6 @@ export default function CinematicGlobe() {
 
       earth = new THREE.Mesh(geo, earthMat);
       globeGroup.add(earth);
-
-      // A visible, animated city-light layer sits above the albedo texture.
-      // The points are distributed over real-world latitude bands so the
-      // illumination visibly travels across continents as the globe rotates.
-      const cityPositions = [];
-      const cityRows = [
-        [-35, -58, 14], [-25, -48, 18], [-10, -62, 22], [8, -74, 20],
-        [18, -102, 23], [34, -96, 27], [48, -100, 25], [58, -82, 18],
-        [38, -8, 32], [50, 8, 38], [58, 30, 24], [28, 36, 30],
-        [12, 20, 25], [-8, 28, 27], [-23, 28, 24], [-34, 18, 18],
-        [8, 78, 36], [22, 78, 38], [35, 105, 42], [48, 112, 34],
-        [58, 135, 26], [28, 140, 22], [0, 116, 24], [-25, 134, 20],
-      ];
-      const toSphere = (lat, lon, radius) => {
-        const phi = THREE.MathUtils.degToRad(90 - lat);
-        const theta = THREE.MathUtils.degToRad(lon + 180);
-        return new THREE.Vector3(
-          -radius * Math.sin(phi) * Math.cos(theta),
-          radius * Math.cos(phi),
-          radius * Math.sin(phi) * Math.sin(theta)
-        );
-      };
-      cityRows.forEach(([lat, lon, count], row) => {
-        for (let i = 0; i < count; i++) {
-          const wave = Math.sin(i * 12.9898 + row * 78.233) * 43758.5453;
-          const jitter = wave - Math.floor(wave);
-          const latJitter = (jitter - 0.5) * 7.5;
-          const lonJitter = (Math.sin(i * 4.17 + row) * 0.5 + 0.5 - 0.5) * 13;
-          cityPositions.push(toSphere(lat + latJitter, lon + lonJitter, 2.478));
-        }
-      });
-      const cityGeo = new THREE.BufferGeometry();
-      cityGeo.setAttribute('position', new THREE.Float32BufferAttribute(cityPositions.flatMap((v) => v.toArray()), 3));
-      cityLights = new THREE.Points(cityGeo, new THREE.ShaderMaterial({
-        uniforms: { sunDirection: { value: sunDirection }, time: { value: 0 } },
-        transparent: true,
-        depthWrite: false,
-        blending: THREE.AdditiveBlending,
-        vertexShader: `
-          uniform vec3 sunDirection;
-          varying float vNight;
-          void main(){
-            vec3 n = normalize(normalize(mat3(modelMatrix) * position));
-            vNight = 1.0 - smoothstep(-0.12, 0.22, dot(n, normalize(sunDirection)));
-            vec4 mv = modelViewMatrix * vec4(position, 1.0);
-            gl_PointSize = clamp(13.0 / max(1.0, -mv.z), 1.4, 4.8);
-            gl_Position = projectionMatrix * mv;
-          }
-        `,
-        fragmentShader: `
-          uniform float time;
-          varying float vNight;
-          void main(){
-            float d = length(gl_PointCoord - 0.5) * 2.0;
-            float glow = pow(max(0.0, 1.0 - d), 2.4);
-            float pulse = 0.86 + 0.14 * sin(time * 2.0 + gl_FragCoord.x * 0.05);
-            gl_FragColor = vec4(1.0, 0.42, 0.08, glow * vNight * pulse * 0.95);
-          }
-        `,
-      }));
-      globeGroup.add(cityLights);
 
       // Separate physically lit cloud layer. No Screen blending: it keeps texture and depth.
       const cloudGeo = new THREE.SphereGeometry(2.462, mobile ? 78 : 168, mobile ? 52 : 116);
@@ -483,8 +397,6 @@ export default function CinematicGlobe() {
         const p = currentP;
         const now = performance.now();
         if (earthMat?.uniforms.storyProgress) earthMat.uniforms.storyProgress.value = p;
-        if (earthMat?.uniforms.time) earthMat.uniforms.time.value = now * 0.001;
-        if (cityLights?.material.uniforms.time) cityLights.material.uniforms.time.value = now * 0.001;
 
         globeGroup.rotation.y = baseRot + p * Math.PI * 1.38;
         clouds.rotation.y = p * Math.PI * 1.38 + p * 0.055;
@@ -586,9 +498,8 @@ export default function CinematicGlobe() {
     return () => {
       disposed = true;
       cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', onScroll);
-      if (!mobileViewport) window.removeEventListener('pointermove', onPointer);
-      cancelAnimationFrame(scrollFrame);
+      window.removeEventListener('scroll', readScroll);
+      window.removeEventListener('pointermove', onPointer);
       observer?.disconnect();
       mount?._cleanupGlobe?.();
       renderer?.dispose();

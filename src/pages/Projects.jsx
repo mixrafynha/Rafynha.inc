@@ -54,7 +54,7 @@ export default function Projects(){
         <article className={`portfolio-card ${project.accent}`} style={{ '--card-index': index }} key={project.id}>
           <div className="portfolio-preview">
             {project.url ? (
-              <picture><source media="(max-width: 800px)" srcSet={project.mobileImage || project.image}/><img src={project.image} alt={`Aperçu du site ${project.title}`} loading="lazy" decoding="async" width="1400" height="900" /></picture>
+              <picture><source media="(max-width: 800px)" srcSet={project.mobileImage || project.image}/><img src={project.image} alt={`Aperçu du site ${project.title}`} loading="lazy" decoding="async" /></picture>
             ) : (
               <div className="local-preview"><span>RAFYNHA</span><strong>{project.title}</strong><small>DÉMO LOCALE</small></div>
             )}

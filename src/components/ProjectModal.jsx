@@ -29,7 +29,7 @@ export default function ProjectModal({ project, onClose }) {
             <button type="button" onClick={onClose} aria-label="Fermer">×</button>
           </div>
         </div>
-        <iframe src={project.url} title={project.title} loading="lazy" referrerPolicy="strict-origin-when-cross-origin" allow="fullscreen" />
+        <iframe src={project.url} title={project.title} loading="eager" allow="fullscreen" />
         <div className="iframe-fallback">Si le site bloque l’aperçu intégré, <a href={project.url} target="_blank" rel="noreferrer">ouvrez-le dans un nouvel onglet ↗</a></div>
       </div>
     </div>

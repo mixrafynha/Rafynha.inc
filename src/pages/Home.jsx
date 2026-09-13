@@ -112,9 +112,9 @@ export default function Home(){
    };
  },[]);
  return <main>
-<section className="space-hero reference-globe-mode" data-stage="1" data-nav-theme="dark">
+<section className="space-hero" data-stage="1" data-nav-theme="dark">
   <div className="space-sticky">
-    <div className="space-nebula"/><div className="space-noise"/><div className="reference-globe-image"><picture><source media="(max-width: 800px)" srcSet="/hero/globe-reference-mobile.webp"/><img src="/hero/globe-reference.webp" alt="" fetchPriority="high" decoding="async" width="1672" height="941" /></picture></div><CinematicGlobe/><CodeOrbit/><div className="space-vignette"/>
+    <div className="space-nebula"/><div className="space-noise"/><CinematicGlobe/><CodeOrbit/><div className="space-vignette"/>
     <div className="space-story-stage stage-1">
       <div className="space-index"><b>01</b><span/>FIRST<br/>IMPRESSIONS<br/>MATTER</div>
       <div className="space-copy"><p className="space-kicker">CREATIVE DEVELOPER · FRANCE</p><h1><span>MAKE IT</span><strong>MEMORABLE.</strong></h1><p className="space-sub">FAST WEBSITES · SHARP INTERFACES · STRONGER BRANDS</p></div>
