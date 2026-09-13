@@ -1728,6 +1728,25 @@ img{content-visibility:auto}
 }
 @media(prefers-reduced-motion:reduce){.rf-simple-mobile:before{animation:none}}
 
+/* Mobile smoothness pass: preserve motion while keeping the compositor light. */
+@media(max-width:800px){
+  html{scroll-behavior:auto!important}
+  .projects-page .portfolio-card{contain:layout paint;will-change:auto!important}
+  .projects-page .portfolio-card.is-in-view{will-change:transform!important}
+  .projects-page .portfolio-preview:after{display:none!important}
+  .projects-page .portfolio-card,
+  .projects-page .portfolio-card:hover{box-shadow:0 16px 38px rgba(22,25,33,.10)!important}
+  .projects-page .portfolio-meta,
+  .projects-page .portfolio-preview{transform:none!important}
+  .projects-page .portfolio-card .portfolio-preview img{filter:none!important}
+  .rf-simple-mobile{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  .rf-mobile-inline-links{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  .site-modal{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  .space-nebula{filter:none!important}
+  .space-noise{opacity:.14!important}
+  .space-vignette{filter:none!important}
+}
+
 /* ===== Project showcase v9 — projects become the screen ===== */
 /* Desktop: use the browser canvas instead of leaving dead margins around the project. */
 .work-reel-sticky{

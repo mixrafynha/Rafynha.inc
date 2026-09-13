@@ -102,8 +102,8 @@ export default function CinematicGlobe() {
       scene.add(globeGroup);
 
       // A dense sphere keeps the silhouette perfectly smooth even very close to camera.
-      const segmentsX = mobile ? 128 : 192;
-      const segmentsY = mobile ? 88 : 132;
+      const segmentsX = mobile ? 88 : 192;
+      const segmentsY = mobile ? 60 : 132;
       const geo = new THREE.SphereGeometry(2.44, segmentsX, segmentsY);
 
       const sunDirection = new THREE.Vector3(1.2, 0.18, 0.92).normalize();
@@ -202,7 +202,7 @@ export default function CinematicGlobe() {
       globeGroup.add(earth);
 
       // Separate physically lit cloud layer. No Screen blending: it keeps texture and depth.
-      const cloudGeo = new THREE.SphereGeometry(2.462, mobile ? 112 : 168, mobile ? 76 : 116);
+      const cloudGeo = new THREE.SphereGeometry(2.462, mobile ? 78 : 168, mobile ? 52 : 116);
       const cloudMat = new THREE.ShaderMaterial({
         uniforms: {
           cloudMap: { value: cloudTex },
@@ -237,7 +237,7 @@ export default function CinematicGlobe() {
       globeGroup.add(clouds);
 
       // Subtle Rayleigh-style rim. Deliberately thin to avoid a neon/cartoon halo.
-      const atmosphereGeo = new THREE.SphereGeometry(2.535, mobile ? 96 : 144, mobile ? 68 : 100);
+      const atmosphereGeo = new THREE.SphereGeometry(2.535, mobile ? 68 : 144, mobile ? 46 : 100);
       const atmosphereMat = new THREE.ShaderMaterial({
         uniforms: { sunDirection: { value: sunDirection } },
         transparent: true,
@@ -339,7 +339,7 @@ export default function CinematicGlobe() {
       }
 
       // Deep starfield: small points, low opacity, no oversized decorative stars.
-      const starCount = mobile ? 850 : 1800;
+      const starCount = mobile ? 480 : 1800;
       const starPos = new Float32Array(starCount * 3);
       for (let i = 0; i < starCount; i++) {
         const r = 18 + Math.random() * 48;
@@ -380,7 +380,7 @@ export default function CinematicGlobe() {
         const w = mount.clientWidth || 1;
         const h = mount.clientHeight || 1;
         const nowMobile = window.innerWidth < 780;
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, nowMobile ? 1.35 : 1.75));
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, nowMobile ? 1.05 : 1.75));
         renderer.setSize(w, h, false);
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
@@ -395,6 +395,7 @@ export default function CinematicGlobe() {
         if (!isVisible || document.hidden) { frame = 0; return; }
         currentP += (targetP - currentP) * 0.075;
         const p = currentP;
+        const now = performance.now();
         if (earthMat?.uniforms.storyProgress) earthMat.uniforms.storyProgress.value = p;
 
         globeGroup.rotation.y = baseRot + p * Math.PI * 1.38;
@@ -447,7 +448,7 @@ export default function CinematicGlobe() {
             if (o.material) o.material.opacity = (idx === 0 ? 0.14 : idx === 1 ? 0.09 : 0.075) * rigAmt;
             o.children?.forEach((packet) => {
               const radius = o.geometry?.parameters?.radius || 2.9;
-              const a = packet.userData.phase + performance.now() * 0.00035 * packet.userData.speed + p * 1.7;
+              const a = packet.userData.phase + now * 0.00035 * packet.userData.speed + p * 1.7;
               packet.position.set(Math.cos(a) * radius, Math.sin(a) * radius, 0);
               packet.material.opacity = (0.42 + 0.42 * rigAmt) * Math.min(1, p * 5);
             });
@@ -461,7 +462,7 @@ export default function CinematicGlobe() {
           meteorRig.rotation.z = -p * 0.3;
           meteorRig.children.forEach((packet, i) => {
             const d = packet.userData;
-            const t = (performance.now() * 0.0001 * d.speed + d.phase + p * 1.9) % 1;
+            const t = (now * 0.0001 * d.speed + d.phase + p * 1.9) % 1;
             const angle = -1.55 + t * 2.7;
             const x = Math.cos(angle) * d.radius;
             const y = Math.sin(angle) * d.radius * 0.48 + d.lane * 0.18;

@@ -8,6 +8,7 @@ export default function Projects(){
 
   useEffect(() => {
     const cards = [...document.querySelectorAll('.projects-page .portfolio-card')];
+    const canHover = window.matchMedia('(pointer: fine)').matches;
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) entry.target.classList.add('is-in-view');
@@ -31,12 +32,16 @@ export default function Projects(){
         card.style.setProperty('--rx', '0deg');
         card.style.setProperty('--ry', '0deg');
       };
-      card.addEventListener('pointermove', onMove, { passive: true });
-      card.addEventListener('pointerleave', onLeave);
+      if (canHover) {
+        card.addEventListener('pointermove', onMove, { passive: true });
+        card.addEventListener('pointerleave', onLeave);
+      }
       card._cleanupMotion = () => {
         observer.unobserve(card);
-        card.removeEventListener('pointermove', onMove);
-        card.removeEventListener('pointerleave', onLeave);
+        if (canHover) {
+          card.removeEventListener('pointermove', onMove);
+          card.removeEventListener('pointerleave', onLeave);
+        }
       };
     });
     return () => cards.forEach((card) => card._cleanupMotion?.());
