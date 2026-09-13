@@ -140,7 +140,7 @@ export default function Home(){
         <div className="work-card-shell">
           <div className="work-browser-bar"><div><i/><i/><i/></div><span>{p.url ? p.url.replace(/^https?:\/\//,'').replace(/\/$/,'') : p.tag}</span><b>0{i+1}</b></div>
           <div className="work-screen">
-            <picture><source media="(max-width: 800px)" srcSet={p.mobileImage || p.image}/><img src={p.image} alt={`${p.title} — aperçu du projet web réalisé par Rafynha`} loading="lazy" decoding="async" width="1400" height="900"/></picture>
+            <picture><source media="(max-width: 800px)" srcSet={p.mobileImage || p.image}/><img src={p.image} alt={`${p.title} — aperçu du projet web réalisé par Rafynha`} loading="lazy" fetchPriority="low" decoding="async" width="1400" height="900"/></picture>
             <div className="work-screen-shade"/>
             <div className="work-screen-copy"><small>{p.tag}</small><h3>{p.title}</h3><div className="work-marketing-title">{p.marketingTitle}</div><button type="button" aria-label={`Ouvrir ${p.title}`}>OPEN LIVE ↗</button></div>
           </div>

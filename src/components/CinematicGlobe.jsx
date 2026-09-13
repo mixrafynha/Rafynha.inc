@@ -7,6 +7,11 @@ const TEXTURES = {
   night: 'https://clouds.matteason.co.uk/images/4096x2048/earth-night.jpg',
   clouds: 'https://clouds.matteason.co.uk/images/2048x1024/clouds.jpg',
 };
+const MOBILE_TEXTURES = {
+  day: 'https://clouds.matteason.co.uk/images/2048x1024/earth.jpg',
+  night: 'https://clouds.matteason.co.uk/images/2048x1024/earth-night.jpg',
+  clouds: 'https://clouds.matteason.co.uk/images/1024x512/clouds.jpg',
+};
 
 const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const smooth = (t) => t * t * (3 - 2 * t);
@@ -25,6 +30,7 @@ export default function CinematicGlobe() {
     let isVisible = true;
     let globeReady = false;
     let observer;
+    let scrollFrame = 0;
 
     const mount = mountRef.current;
     const hero = mount?.closest('.space-hero');
@@ -44,8 +50,16 @@ export default function CinematicGlobe() {
       pointerY = (e.clientY / window.innerHeight - 0.5) * 2;
     };
 
-    window.addEventListener('scroll', readScroll, { passive: true });
-    window.addEventListener('pointermove', onPointer, { passive: true });
+    const onScroll = () => {
+      if (scrollFrame) return;
+      scrollFrame = requestAnimationFrame(() => {
+        scrollFrame = 0;
+        readScroll();
+      });
+    };
+    const mobileViewport = window.innerWidth < 780;
+    window.addEventListener('scroll', onScroll, { passive: true });
+    if (!mobileViewport) window.addEventListener('pointermove', onPointer, { passive: true });
     readScroll();
 
     (async () => {
@@ -76,10 +90,11 @@ export default function CinematicGlobe() {
 
       const loader = new THREE.TextureLoader();
       loader.setCrossOrigin('anonymous');
+      const textureSet = mobile ? MOBILE_TEXTURES : TEXTURES;
       const [dayTex, nightTex, cloudTex] = await Promise.all([
-        loader.loadAsync(TEXTURES.day),
-        loader.loadAsync(TEXTURES.night),
-        loader.loadAsync(TEXTURES.clouds),
+        loader.loadAsync(textureSet.day),
+        loader.loadAsync(textureSet.night),
+        loader.loadAsync(textureSet.clouds),
       ]);
       if (disposed) return;
 
@@ -380,7 +395,7 @@ export default function CinematicGlobe() {
         const w = mount.clientWidth || 1;
         const h = mount.clientHeight || 1;
         const nowMobile = window.innerWidth < 780;
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, nowMobile ? 1.05 : 1.75));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, nowMobile ? 1 : 1.75));
         renderer.setSize(w, h, false);
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
@@ -498,8 +513,9 @@ export default function CinematicGlobe() {
     return () => {
       disposed = true;
       cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', readScroll);
-      window.removeEventListener('pointermove', onPointer);
+      window.removeEventListener('scroll', onScroll);
+      if (!mobileViewport) window.removeEventListener('pointermove', onPointer);
+      cancelAnimationFrame(scrollFrame);
       observer?.disconnect();
       mount?._cleanupGlobe?.();
       renderer?.dispose();
