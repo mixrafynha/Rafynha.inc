@@ -56,7 +56,9 @@ export default function Home(){
    // intercept the wheel while the sticky project reel is actually active.
    let wheelLocked=false;
    let wheelUnlock=0;
+   const canStepWithWheel=window.matchMedia('(pointer: fine)').matches;
    const onWheel=(event)=>{
+     if(!canStepWithWheel) return;
      const rect=reel.getBoundingClientRect();
      const reelActive=rect.top<=0 && rect.bottom>=window.innerHeight;
      if(!reelActive || Math.abs(event.deltaY)<6 || wheelLocked) return;
@@ -82,6 +84,7 @@ export default function Home(){
    };
 
    const goNext=()=>{
+     if(wheelLocked) return;
      const rect=reel.getBoundingClientRect();
      const travel=Math.max(1,reel.offsetHeight-window.innerHeight);
      const progress=clamp((-rect.top)/travel);
@@ -92,6 +95,9 @@ export default function Home(){
      void sticky.offsetWidth;
      sticky.classList.add('is-changing');
      window.setTimeout(()=>sticky.classList.remove('is-changing'),560);
+     wheelLocked=true;
+     clearTimeout(wheelUnlock);
+     wheelUnlock=window.setTimeout(()=>{wheelLocked=false;},620);
      const reelTop=window.scrollY+rect.top;
      const targetProgress=(current+1)/Math.max(1,cards.length-1);
      window.scrollTo({top:reelTop+(travel*targetProgress),behavior:'smooth'});
