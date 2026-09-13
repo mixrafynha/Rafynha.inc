@@ -16,6 +16,7 @@ export default function Home(){
    const reel=document.querySelector('.work-reel');
    const sticky=reel?.querySelector('.work-reel-sticky');
    const cards=reel?[...reel.querySelectorAll('.work-card')]:[];
+   const nextButton=reel?.querySelector('.work-reel-next');
    if(!reel||!sticky||!cards.length) return;
 
    const setStates=(current)=>{
@@ -46,6 +47,7 @@ export default function Home(){
      sticky.style.setProperty('--reel-frac',frac.toFixed(4));
      sticky.style.setProperty('--reel-local',t.toFixed(4));
      sticky.style.setProperty('--reel-progress',progress.toFixed(4));
+     if(nextButton) nextButton.disabled=current>=cards.length-1;
    };
 
    const onScroll=()=>{ if(!raf) raf=requestAnimationFrame(update); };
@@ -79,14 +81,28 @@ export default function Home(){
      wheelUnlock=setTimeout(()=>{wheelLocked=false;},360);
    };
 
+   const goNext=()=>{
+     const rect=reel.getBoundingClientRect();
+     const travel=Math.max(1,reel.offsetHeight-window.innerHeight);
+     const progress=clamp((-rect.top)/travel);
+     const raw=progress*Math.max(0,cards.length-1);
+     const current=Math.min(cards.length-1,Math.round(raw));
+     if(current>=cards.length-1) return;
+     const reelTop=window.scrollY+rect.top;
+     const targetProgress=(current+1)/Math.max(1,cards.length-1);
+     window.scrollTo({top:reelTop+(travel*targetProgress),behavior:'smooth'});
+   };
+
    update();
    addEventListener('scroll',onScroll,{passive:true});
    addEventListener('resize',onScroll,{passive:true});
    addEventListener('wheel',onWheel,{passive:false});
+   nextButton?.addEventListener('click',goNext);
    return()=>{
      removeEventListener('scroll',onScroll);
      removeEventListener('resize',onScroll);
      removeEventListener('wheel',onWheel);
+     nextButton?.removeEventListener('click',goNext);
      clearTimeout(wheelUnlock);
      if(raf)cancelAnimationFrame(raf)
    };
@@ -127,7 +143,8 @@ export default function Home(){
         </div>
         <div className="work-rail"><span>0{i+1}</span><b>{p.category}</b></div>
       </article>)}
-      <div className="work-reel-progress" aria-hidden="true"><span/></div>
+    <div className="work-reel-progress" aria-hidden="true"><span/></div>
+    <button className="work-reel-next" type="button" aria-label="Avançar para o próximo projeto"><span>NEXT PROJECT</span><b>↓</b></button>
     </div>
   </div>
   <div className="work-end"><p>DESIGN · CODE · IMPACT</p><h2>YOUR TURN.</h2><Link to="/contact">START A PROJECT ↗</Link></div>

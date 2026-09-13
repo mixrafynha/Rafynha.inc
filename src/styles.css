@@ -1728,6 +1728,41 @@ img{content-visibility:auto}
 }
 @media(prefers-reduced-motion:reduce){.rf-simple-mobile:before{animation:none}}
 
+/* Optional project navigation: keyboard/touch friendly arrow alongside scroll. */
+.work-reel-next{
+  position:absolute;
+  z-index:20;
+  right:clamp(24px,4vw,68px);
+  bottom:28px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  min-height:44px;
+  padding:0 8px 0 14px;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:0;
+  background:linear-gradient(135deg,rgba(11,17,27,.82),rgba(11,17,27,.46));
+  color:#eaf3ff;
+  font:600 8px 'DM Mono';
+  letter-spacing:.14em;
+  cursor:pointer;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  box-shadow:0 12px 30px rgba(0,0,0,.20),inset 0 0 0 1px rgba(255,255,255,.025);
+  transition:transform .3s cubic-bezier(.16,1,.3,1),border-color .3s ease,opacity .3s ease,background .3s ease;
+}
+.work-reel-next:after{content:'';position:absolute;left:0;bottom:-1px;width:42%;height:1px;background:linear-gradient(90deg,#79bfff,#ff6bc7);transition:width .3s ease}
+.work-reel-next b{display:grid;place-items:center;width:28px;height:28px;border-left:1px solid rgba(255,255,255,.16);font:400 22px/1 'Space Grotesk';transition:transform .3s ease,color .3s ease}
+.work-reel-next:hover{transform:translateY(-4px);border-color:rgba(128,194,255,.65);background:linear-gradient(135deg,rgba(21,35,56,.92),rgba(26,12,38,.72))}
+.work-reel-next:hover:after{width:100%}
+.work-reel-next:hover b{transform:translateY(3px);color:#ff8cd5}
+.work-reel-next:disabled{opacity:.18;pointer-events:none}
+@media(max-width:800px){
+  .work-reel-next{right:16px;bottom:18px;min-height:40px;gap:9px;padding-left:11px;font-size:7px;backdrop-filter:none;-webkit-backdrop-filter:none}
+  .work-reel-next b{width:25px;height:25px;font-size:20px}
+}
+@media(prefers-reduced-motion:reduce){.work-reel-next{transition:none!important}.work-reel-next:hover{transform:none}}
+
 /* Mobile smoothness pass: preserve motion while keeping the compositor light. */
 @media(max-width:800px){
   html{scroll-behavior:auto!important}
