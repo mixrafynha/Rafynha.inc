@@ -5065,3 +5065,64 @@ footer.rf-footer,footer{
     filter:none!important;
   }
 }
+
+/* V8.2 — mobile hero composition + stronger social proof */
+@media (max-width:900px){
+  /* centre the copy block more naturally in the upper area */
+  .motion-v7 .cp-copy{
+    top:calc(96px + env(safe-area-inset-top))!important;
+    left:18px!important;right:18px!important;
+    height:22svh!important;
+    text-align:center!important;
+  }
+  .motion-v7 .cp-copy__scene{align-items:center!important;text-align:center!important}
+  .motion-v7 .cp-eyebrow{justify-content:center!important}
+  .motion-v7 .cp-copy h1,.motion-v7 .cp-copy__scene h1{
+    margin-inline:auto!important;
+    max-width:min(94vw,390px)!important;
+    text-align:center!important;
+    font-size:clamp(30px,9vw,42px)!important;
+    line-height:.90!important;
+  }
+  .motion-v7 .cp-copy__scene h1 em{display:inline!important;text-align:center!important}
+  .motion-v7 .cp-copy__foot{display:flex!important;justify-content:center!important;margin-top:9px!important}
+  .motion-v7 .cp-copy__foot p{max-width:330px!important;text-align:center!important;font-size:10px!important;line-height:1.35!important}
+
+  /* pull the artwork upward and give it more presence */
+  .motion-v7 .cp-visual{
+    top:25svh!important;
+    height:52svh!important;
+    width:116vw!important;
+  }
+  .motion-v7 .cp-image img{object-position:center center!important}
+
+  /* stronger, larger review card without expensive blur */
+  .cp-mobile-review{
+    left:14px!important;right:14px!important;
+    bottom:calc(14px + env(safe-area-inset-bottom))!important;
+    min-height:92px!important;
+    padding:15px 16px!important;
+    gap:13px!important;
+    border-radius:17px!important;
+    background:rgba(10,25,45,.94)!important;
+    border:1px solid rgba(111,178,255,.22)!important;
+    box-shadow:0 12px 28px rgba(0,35,85,.22)!important;
+    backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  }
+  .cp-mobile-review>img{
+    width:50px!important;height:50px!important;flex:0 0 50px!important;
+    border:2px solid rgba(255,255,255,.86)!important;
+    box-shadow:0 4px 12px rgba(0,0,0,.18)!important;
+  }
+  .cp-mobile-review strong{font-size:13px!important;font-weight:800!important;gap:9px!important}
+  .cp-mobile-review strong span{font-size:10px!important;letter-spacing:.04em!important}
+  .cp-mobile-review p{margin-top:7px!important;font-size:11px!important;line-height:1.42!important;font-weight:520!important;color:#d4dfed!important}
+}
+@media (max-width:390px){
+  .motion-v7 .cp-copy{top:calc(90px + env(safe-area-inset-top))!important}
+  .motion-v7 .cp-copy h1,.motion-v7 .cp-copy__scene h1{font-size:clamp(29px,9vw,36px)!important}
+  .motion-v7 .cp-visual{top:24svh!important;height:51svh!important;width:119vw!important}
+  .cp-mobile-review{left:10px!important;right:10px!important;min-height:88px!important;padding:13px 14px!important}
+  .cp-mobile-review>img{width:46px!important;height:46px!important;flex-basis:46px!important}
+  .cp-mobile-review p{font-size:10.5px!important}
+}
