@@ -11,12 +11,17 @@ const links = [
 export default function Navbar(){
   const [scrolled,setScrolled] = useState(false);
   const [theme,setTheme] = useState('dark');
+  const [hidden,setHidden] = useState(false);
 
   useEffect(()=>{
     let raf = 0;
+    let lastY = window.scrollY;
     const update = ()=>{
       raf = 0;
-      setScrolled(window.scrollY > 22);
+      const y = window.scrollY;
+      setScrolled(y > 22);
+      setHidden(y > lastY && y > 120);
+      lastY = y;
       const sections = [...document.querySelectorAll('[data-nav-theme]')];
       let current = 'dark';
       for(const el of sections){
@@ -32,7 +37,7 @@ export default function Navbar(){
     return ()=>{ cancelAnimationFrame(raf); removeEventListener('scroll',onScroll); removeEventListener('resize',onScroll); };
   },[]);
 
-  const stateClass = `${scrolled?'is-scrolled':''} theme-${theme}`;
+  const stateClass = `${scrolled?'is-scrolled':''} ${hidden?'is-hidden':''} theme-${theme}`;
 
   return <>
     <header className={`rf-simple-desktop ${stateClass}`}>

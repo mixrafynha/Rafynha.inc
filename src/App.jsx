@@ -1,14 +1,15 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
 import Seo from './components/Seo.jsx';
 import RevealOnScroll from './components/RevealOnScroll.jsx';
 import Home from './pages/Home.jsx';
-import Projects from './pages/Projects.jsx';
-import Services from './pages/Services.jsx';
-import About from './pages/About.jsx';
-import Contact from './pages/Contact.jsx';
+
+const Projects = lazy(() => import('./pages/Projects.jsx'));
+const Services = lazy(() => import('./pages/Services.jsx'));
+const About = lazy(() => import('./pages/About.jsx'));
+const Contact = lazy(() => import('./pages/Contact.jsx'));
 
 export default function App(){
   const { pathname } = useLocation();
@@ -17,13 +18,15 @@ export default function App(){
     <Seo/>
     <Navbar/>
     <RevealOnScroll/>
-    <Routes>
-      <Route path="/" element={<Home/>}/>
-      <Route path="/projets" element={<Projects/>}/>
-      <Route path="/services" element={<Services/>}/>
-      <Route path="/a-propos" element={<About/>}/>
-      <Route path="/contact" element={<Contact/>}/>
-    </Routes>
+    <Suspense fallback={null}>
+      <Routes>
+        <Route path="/" element={<Home/>}/>
+        <Route path="/projets" element={<Projects/>}/>
+        <Route path="/services" element={<Services/>}/>
+        <Route path="/a-propos" element={<About/>}/>
+        <Route path="/contact" element={<Contact/>}/>
+      </Routes>
+    </Suspense>
     <Footer/>
   </>
 }

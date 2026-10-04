@@ -40,9 +40,11 @@ export default function CinematicGlobe() {
       const r = hero.getBoundingClientRect();
       const max = Math.max(1, hero.offsetHeight - window.innerHeight);
       targetP = clamp(-r.top / max);
-      const stage = Math.min(2, Math.floor(targetP * 2) + 1);
+      const stage = Math.min(4, Math.floor(targetP * 4) + 1);
       hero.dataset.stage = String(stage);
       hero.style.setProperty('--story-progress', targetP.toFixed(4));
+      mount.style.setProperty('--earth-scroll', targetP.toFixed(4));
+      mount.style.setProperty('--earth-scroll-drift', `${((targetP - 0.5) * 2).toFixed(3)}vw`);
     };
 
     const onPointer = (e) => {
@@ -84,7 +86,7 @@ export default function CinematicGlobe() {
       renderer.setSize(mount.clientWidth, mount.clientHeight, false);
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 0.92;
+      renderer.toneMappingExposure = 0.82;
       renderer.setClearColor(0x000000, 0);
       mount.appendChild(renderer.domElement);
 
@@ -121,7 +123,7 @@ export default function CinematicGlobe() {
       const segmentsY = mobile ? 60 : 132;
       const geo = new THREE.SphereGeometry(2.44, segmentsX, segmentsY);
 
-      const sunDirection = new THREE.Vector3(1.2, 0.18, 0.92).normalize();
+      const sunDirection = new THREE.Vector3(1.85, 0.34, 0.72).normalize();
       const earthUniforms = {
         dayMap: { value: dayTex },
         nightMap: { value: nightTex },
@@ -167,8 +169,8 @@ export default function CinematicGlobe() {
             float cloud = texture2D(cloudMap, vUv).r;
 
             // Realistic broad day/night terminator, not a hard cartoon cut.
-            float dayAmt = smoothstep(-0.14, 0.16, ndl);
-            float diffuse = 0.13 + 0.87 * max(ndl, 0.0);
+            float dayAmt = smoothstep(-0.20, 0.18, ndl);
+            float diffuse = 0.08 + 0.76 * max(ndl, 0.0);
 
             // Detect ocean from the satellite albedo and give it a tight solar glint.
             float oceanBlue = day.b - max(day.r, day.g) * 0.72;
@@ -180,33 +182,22 @@ export default function CinematicGlobe() {
             // Cloud shadows help the land stop looking like a flat printed texture.
             float cloudShadow = 1.0 - cloud * 0.085 * smoothstep(0.0, 0.8, ndl);
             vec3 dayLit = day * diffuse * cloudShadow;
-            dayLit += vec3(1.0, 0.82, 0.60) * spec * 1.55;
-            dayLit += vec3(0.035, 0.08, 0.13) * grazing * oceanMask * 0.45;
+            dayLit = mix(dayLit, dayLit * vec3(0.90, 0.95, 1.02), oceanMask * 0.28);
+            dayLit += vec3(1.0, 0.74, 0.48) * spec * 0.95;
+            dayLit += vec3(0.018, 0.046, 0.085) * grazing * oceanMask * 0.32;
 
             // City lights stay restrained and only appear on the true night side.
-            vec3 cityColor = night * vec3(1.05, 0.72, 0.38) * 1.55;
+            vec3 cityColor = night * vec3(1.04, 0.70, 0.36) * 1.18;
             float nightMask = 1.0 - smoothstep(-0.19, 0.08, ndl);
             vec3 nightLit = cityColor * nightMask + day * 0.018;
 
             vec3 col = mix(nightLit, dayLit, dayAmt);
 
-            // The scroll gradually wakes a digital colour layer inside the Earth.
-            // It stays restrained at the start, then moves through the same
-            // blue/violet/magenta/amber language used by the code overlays.
-            vec3 scrollBlue = vec3(0.08, 0.42, 1.0);
-            vec3 scrollViolet = vec3(0.47, 0.18, 1.0);
-            vec3 scrollPink = vec3(1.0, 0.10, 0.55);
-            vec3 scrollAmber = vec3(1.0, 0.48, 0.08);
-            vec3 scrollColor = mix(scrollBlue, scrollViolet, smoothstep(0.12, 0.38, storyProgress));
-            scrollColor = mix(scrollColor, scrollPink, smoothstep(0.38, 0.66, storyProgress));
-            scrollColor = mix(scrollColor, scrollAmber, smoothstep(0.66, 0.94, storyProgress));
-            float digitalPulse = smoothstep(0.16, 0.72, storyProgress) * (0.22 + 0.78 * grazing);
-            col += scrollColor * digitalPulse * 0.075;
-
             // Slight atmospheric aerial perspective at the horizon.
             float limb = pow(1.0 - max(dot(N, V), 0.0), 3.2);
             float sunSide = smoothstep(-0.35, 0.55, ndl);
-            col += vec3(0.028, 0.12, 0.28) * limb * (0.20 + 0.80 * sunSide);
+            col += vec3(0.018, 0.074, 0.16) * limb * (0.18 + 0.58 * sunSide);
+            col *= vec3(0.86, 0.91, 0.98);
 
             gl_FragColor = vec4(col, 1.0);
           }
@@ -244,7 +235,7 @@ export default function CinematicGlobe() {
             c = smoothstep(0.18, 0.82, c);
             float light = 0.23 + 0.77 * max(dot(normalize(vWorldNormal), normalize(sunDirection)), 0.0);
             vec3 cloudColor = mix(vec3(0.48,0.56,0.66), vec3(1.0,0.985,0.95), light);
-            gl_FragColor = vec4(cloudColor, c * 0.68);
+            gl_FragColor = vec4(cloudColor, c * 0.42);
           }
         `,
       });
@@ -275,10 +266,10 @@ export default function CinematicGlobe() {
           varying vec3 vW;
           void main(){
             vec3 V = normalize(cameraPosition - vW);
-            float rim = pow(1.0 - max(dot(normalize(vN), V), 0.0), 4.8);
-            float lit = smoothstep(-0.42, 0.38, dot(normalize(vN), normalize(sunDirection)));
-            vec3 c = mix(vec3(0.02,0.12,0.34), vec3(0.20,0.62,1.0), lit);
-            gl_FragColor = vec4(c, rim * (0.20 + lit * 0.72));
+            float rim = pow(1.0 - max(dot(normalize(vN), V), 0.0), 6.4);
+            float lit = smoothstep(-0.30, 0.48, dot(normalize(vN), normalize(sunDirection)));
+            vec3 c = mix(vec3(0.01,0.055,0.15), vec3(0.075,0.28,0.58), lit);
+            gl_FragColor = vec4(c, rim * (0.05 + lit * 0.30));
           }
         `,
       });
@@ -386,10 +377,10 @@ export default function CinematicGlobe() {
       moon.position.set(-3.28, 1.62, -2.25);
       scene.add(moon);
 
-      const key = new THREE.DirectionalLight(0xffe5c2, 2.5);
+      const key = new THREE.DirectionalLight(0xffddba, 1.55);
       key.position.set(6.5, 1.2, 4.6);
       scene.add(key);
-      scene.add(new THREE.AmbientLight(0x0b1424, 0.11));
+      scene.add(new THREE.AmbientLight(0x07101d, 0.055));
 
       const resize = () => {
         const w = mount.clientWidth || 1;
@@ -419,28 +410,28 @@ export default function CinematicGlobe() {
         let x, y, z, scale;
         if (p < 0.27) {
           const q = smooth(p / 0.27);
-          x = 1.02 - q * 0.20;
-          y = -0.06 - q * 0.13;
-          z = 7.46 - q * 0.42;
-          scale = 1.0 + q * 0.055;
+          x = 1.92 - q * 0.22;
+          y = -0.10 - q * 0.06;
+          z = 9.35 - q * 0.42;
+          scale = 0.68 + q * 0.055;
         } else if (p < 0.55) {
           const q = smooth((p - 0.27) / 0.28);
-          x = 0.82 - q * 1.40;
-          y = -0.19 + q * 0.13;
-          z = 7.04 - q * 0.36;
-          scale = 1.055 + q * 0.085;
+          x = 1.70 - q * 1.32;
+          y = -0.16 + q * 0.08;
+          z = 8.93 - q * 0.43;
+          scale = 0.735 + q * 0.105;
         } else if (p < 0.80) {
           const q = smooth((p - 0.55) / 0.25);
-          x = -0.58 + q * 1.34;
-          y = -0.06 - q * 0.18;
-          z = 6.68 + q * 0.34;
-          scale = 1.14 - q * 0.045;
+          x = 0.38 + q * 0.98;
+          y = -0.04 - q * 0.16;
+          z = 8.50 + q * 0.30;
+          scale = 0.84 - q * 0.015;
         } else {
           const q = smooth((p - 0.80) / 0.20);
-          x = 0.76 - q * 0.66;
-          y = -0.24 - q * 0.92;
-          z = 7.02 - q * 0.36;
-          scale = 1.095 + q * 0.30;
+          x = 1.36 - q * 0.54;
+          y = -0.20 - q * 0.64;
+          z = 8.80 - q * 0.34;
+          scale = 0.825 + q * 0.18;
         }
 
         const nowMobile = window.innerWidth < 780;
@@ -453,7 +444,7 @@ export default function CinematicGlobe() {
 
         stars.rotation.y = p * 0.055;
         if (dataRig) {
-          const rigAmt = smooth(clamp((p - 0.19) / 0.18)) * (1.0 - smooth(clamp((p - 0.79) / 0.14)));
+          const rigAmt = 0;
           dataRig.visible = rigAmt > 0.01;
           dataRig.position.copy(globeGroup.position);
           dataRig.scale.copy(globeGroup.scale);
@@ -470,7 +461,7 @@ export default function CinematicGlobe() {
           });
         }
         if (meteorRig) {
-          const meteorAmt = smooth(clamp((p - 0.08) / 0.18)) * (1.0 - smooth(clamp((p - 0.92) / 0.08)));
+          const meteorAmt = 0;
           meteorRig.visible = meteorAmt > 0.01;
           meteorRig.position.copy(globeGroup.position);
           meteorRig.scale.copy(globeGroup.scale);
@@ -523,5 +514,9 @@ export default function CinematicGlobe() {
     };
   }, []);
 
-  return <div ref={mountRef} className="cinematic-globe" aria-hidden="true" />;
+  return <div ref={mountRef} className="cinematic-globe" aria-hidden="true">
+    <div className="real-earth real-earth-europe" />
+    <div className="real-earth real-earth-asia" />
+    <div className="real-earth real-earth-americas" />
+  </div>;
 }

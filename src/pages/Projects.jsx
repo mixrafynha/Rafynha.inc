@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import PageHero from '../components/PageHero.jsx';
-import ProjectModal from '../components/ProjectModal.jsx';
 import { projects } from '../projectsData.js';
+
+const ProjectModal = lazy(() => import('../components/ProjectModal.jsx'));
 
 export default function Projects(){
   const [active, setActive] = useState(null);
@@ -77,6 +78,6 @@ export default function Projects(){
         </article>
       ))}
     </section>
-    <ProjectModal project={active} onClose={() => setActive(null)} />
+    {active && <Suspense fallback={null}><ProjectModal project={active} onClose={() => setActive(null)} /></Suspense>}
   </main>
 }
