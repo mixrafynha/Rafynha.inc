@@ -95,28 +95,30 @@ export default function HeroJourney(){
       const typeCount=s===1?Math.max(0,Math.min(code.length,Math.floor(clamp((l-.16)/.42)*(code.length+1)))):(s>1?code.length:0);
       el.dataset.navTheme=s===2?'lime':'light';
 
-      el.style.setProperty('--hp',current.toFixed(4));
-      el.style.setProperty('--hl',l.toFixed(4));
-      el.style.setProperty('--scene-shift',`${((l-.5)*12).toFixed(2)}px`);
+      // Mobile intentionally avoids per-frame DOM/style work. The active scene class
+      // is enough for the lightweight crossfade and makes touch scrolling much cheaper.
+      if(!mobile){
+        el.style.setProperty('--hp',current.toFixed(4));
+        el.style.setProperty('--hl',l.toFixed(4));
+        el.style.setProperty('--scene-shift',`${((l-.5)*12).toFixed(2)}px`);
 
-      // Scroll-driven handoff: slide/fade panels without rotating them.
-      // CSS variables are used so this choreography wins over legacy responsive transforms.
-      const imageHandoff=clamp((l-.58)/.34);
-      const visualPos=Math.min(2,s+imageHandoff*imageHandoff*(3-2*imageHandoff));
-      const figures=el.querySelectorAll('.cp-image');
-      figures.forEach((figure,index)=>{
-        const signed=visualPos-index;
-        const d=Math.abs(signed);
-        const opacity=clamp(1-d*1.15);
-        const direction=index%2===0?-1:1;
-        const sceneOffsetX=index===1?-90:index===2?-120:0;
-        const x=Math.max(-150,Math.min(112,(signed*-70)+(d>.08?direction*24:0)+sceneOffsetX));
-        const y=index===1?31:0;
-        const extraScale=index===1?.04:index===2?.10:0;
-        figure.style.setProperty('--image-opacity',opacity.toFixed(3));
-        figure.style.setProperty('--image-transform',`translate3d(${x.toFixed(1)}px,${y}px,0) scale(${(1+extraScale-d*.035).toFixed(3)})`);
-        figure.style.zIndex=String(20-Math.round(d*4));
-      });
+        const imageHandoff=clamp((l-.58)/.34);
+        const visualPos=Math.min(2,s+imageHandoff*imageHandoff*(3-2*imageHandoff));
+        const figures=el.querySelectorAll('.cp-image');
+        figures.forEach((figure,index)=>{
+          const signed=visualPos-index;
+          const d=Math.abs(signed);
+          const opacity=clamp(1-d*1.15);
+          const direction=index%2===0?-1:1;
+          const sceneOffsetX=index===1?-90:index===2?-120:0;
+          const x=Math.max(-150,Math.min(112,(signed*-70)+(d>.08?direction*24:0)+sceneOffsetX));
+          const y=index===1?31:0;
+          const extraScale=index===1?.04:index===2?.10:0;
+          figure.style.setProperty('--image-opacity',opacity.toFixed(3));
+          figure.style.setProperty('--image-transform',`translate3d(${x.toFixed(1)}px,${y}px,0) scale(${(1+extraScale-d*.035).toFixed(3)})`);
+          figure.style.zIndex=String(20-Math.round(d*4));
+        });
+      }
       if(s!==lastStage){lastStage=s;setStage(s)}
       if(ph!==lastPhase){lastPhase=ph;setPhase(ph)}
       if(typeCount!==lastTyped){lastTyped=typeCount;setTyped(typeCount)}

@@ -4984,3 +4984,43 @@ footer.rf-footer,footer{
   .services-preview,.project-orbit-showcase,.statement,.minimal-cta{content-visibility:auto;contain-intrinsic-size:900px}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+\n\n/* MOBILE PERFORMANCE V8 — faster 3-step touch journey + cheaper compositing */
+@media (max-width:900px){
+  /* 3 stages now need ~30% less finger travel */
+  .cinematic-process--three{height:210svh!important}
+
+  /* remove expensive blur/filter interpolation from the sticky hero */
+  .motion-v7 .cp-copy__scene{
+    filter:none!important;
+    transition:opacity .16s linear,transform .18s ease-out!important;
+    will-change:auto!important;
+  }
+  .motion-v7 .cp-copy__scene:not(.is-active){transform:translate3d(0,5px,0)!important}
+  .motion-v7 .cp-image,
+  .motion-v7 .cp-image.is-active,
+  .motion-v7[data-phase="reveal"] .cp-image.is-active,
+  .motion-v7[data-phase="hold"] .cp-image.is-active,
+  .motion-v7[data-phase="exit"] .cp-image.is-active{
+    filter:none!important;
+    animation:none!important;
+    transition:opacity .16s linear!important;
+    transform:translate3d(0,0,0) scale(.98)!important;
+    will-change:auto!important;
+  }
+  .motion-v7 .cp-image:before{display:none!important}
+  .motion-v7 .cp-image img{filter:none!important;animation:none!important}
+
+  /* keep the review responsive without continuous GPU layers */
+  .cp-mobile-review{transition:opacity .16s linear,transform .18s ease-out!important;will-change:auto!important}
+
+  /* below-the-fold decorative motion is unnecessary on phones */
+  .project-orbit-showcase *,
+  .services-preview *,
+  .statement *,
+  .minimal-cta *{animation:none!important}
+
+  /* isolate larger sections so layout/paint work stays local */
+  .project-orbit-showcase,.services-preview,.statement,.minimal-cta,.footer{
+    contain:layout paint style;
+  }
+}
