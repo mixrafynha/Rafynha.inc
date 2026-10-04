@@ -74,6 +74,7 @@ export default function HeroJourney(){
   useLayoutEffect(()=>{
     const el=root.current; if(!el) return;
     let raf=0, visible=true, lastStage=-1, lastPhase='', lastTyped=-1;
+    const mobile=window.matchMedia('(max-width: 900px)').matches;
     let metrics={top:0,travel:1};
     let initialized=false;
     const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
@@ -136,6 +137,12 @@ export default function HeroJourney(){
       target.current=getProgress();
       if(!initialized){paint(target.current,true);return}
       if(!visible) return;
+      if(mobile){
+        if(running.current) return;
+        running.current=true;
+        raf=requestAnimationFrame(()=>{paint(target.current,true);running.current=false});
+        return;
+      }
       if(!running.current){running.current=true;raf=requestAnimationFrame(tick)}
     };
 

@@ -4944,3 +4944,43 @@ footer.rf-footer,footer{
   .cp-mobile-review{left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));padding:9px 10px}
   .cp-mobile-review p{font-size:8.5px}
 }
+
+/* V7.6 — requested mobile spacing/type/proof tweaks */
+@media(max-width:900px){
+  /* title + subtitle 20px lower */
+  .motion-v7 .cp-copy{top:calc(88px + env(safe-area-inset-top))!important}
+  /* ~5% smaller than V7.5 */
+  .motion-v7 .cp-copy h1{font-size:clamp(29.5px,8.74vw,41.8px)!important}
+  .motion-v7 .cp-copy__foot p{font-size:9.5px!important}
+
+  /* client comment: a little taller, fuller and easier to read */
+  .cp-mobile-review{
+    min-height:76px!important;
+    padding:13px 15px!important;
+    gap:12px!important;
+    border-radius:15px!important;
+  }
+  .cp-mobile-review>img{width:43px!important;height:43px!important;flex-basis:43px!important}
+  .cp-mobile-review strong{font-size:12px!important;font-weight:750!important}
+  .cp-mobile-review strong span{font-size:8.5px!important;font-weight:700!important}
+  .cp-mobile-review p{margin-top:5px!important;font-size:9.5px!important;line-height:1.4!important;font-weight:500!important}
+}
+@media(max-width:390px){
+  .motion-v7 .cp-copy{top:calc(82px + env(safe-area-inset-top))!important}
+  .motion-v7 .cp-copy h1{font-size:clamp(27.5px,8.55vw,35.2px)!important}
+  .motion-v7 .cp-copy__foot p{font-size:9px!important}
+  .cp-mobile-review{min-height:72px!important;padding:12px 13px!important}
+}
+
+/* MOBILE PERFORMANCE PASS — desktop visuals untouched */
+@media (max-width:900px){
+  html{scroll-behavior:auto!important}
+  .cp-ambient,.project-orbit-stage:after{filter:none!important}
+  .cp-mobile-review,.navbar,.nav-shell,.project-orbit-browser,.service-mobile-card,.project-orbit-card,.minimal-cta,.footer{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  .cp-mobile-review{background:rgba(13,25,42,.94)!important;box-shadow:0 8px 24px rgba(0,0,0,.18)!important}
+  .motion-v7 .cp-image img{filter:none!important}
+  .cp-ambient,.project-orbit-stage:before,.project-orbit-stage:after,.project-orbit-ring:before,.project-orbit-ring:after{animation:none!important}
+  .service-mobile-card,.project-orbit-card{will-change:auto!important}
+  .services-preview,.project-orbit-showcase,.statement,.minimal-cta{content-visibility:auto;contain-intrinsic-size:900px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
