@@ -5165,7 +5165,14 @@ footer.rf-footer,footer{
   .motion-v7[data-phase="hold"] .cp-image--2.is-active,
   .motion-v7[data-phase="exit"] .cp-image--1.is-active,
   .motion-v7[data-phase="exit"] .cp-image--2.is-active{
-    transform:translate3d(0,0,0) scale(.88)!important;
+    transform:translate3d(0,0,0) scale(.85)!important;
+  }
+  .motion-v7 .cp-image--0,
+  .motion-v7 .cp-image--0.is-active,
+  .motion-v7[data-phase="reveal"] .cp-image--0.is-active,
+  .motion-v7[data-phase="hold"] .cp-image--0.is-active,
+  .motion-v7[data-phase="exit"] .cp-image--0.is-active{
+    transform:translate3d(0,9svh,0) scale(.85)!important;
   }
   .cp-mobile-review{
     bottom:calc(36px + env(safe-area-inset-bottom))!important;
@@ -5329,5 +5336,88 @@ footer.rf-footer,footer{
   }
   .motion-v7 .cp-copy__scene--1 .cp-dev-times b{
     color:#596f91!important;
+  }
+}
+
+/* Mobile only: shorter 3-step scroll and simpler transitions. */
+@media (max-width:900px){
+  .cinematic-process--three{
+    height:240svh!important;
+  }
+  .motion-v7 .cp-copy__scene,
+  .motion-v7 .cp-copy__scene.is-active,
+  .motion-v7 .cp-image,
+  .motion-v7 .cp-image.is-active,
+  .motion-v7 .cp-mobile-review,
+  .motion-v7 .cp-dev-times{
+    transition:none!important;
+    animation:none!important;
+    filter:none!important;
+  }
+  .motion-v7 .cp-copy__scene:not(.is-active),
+  .motion-v7 .cp-image:not(.is-active){
+    opacity:0!important;
+  }
+  .motion-v7 .cp-copy__scene.is-active,
+  .motion-v7 .cp-image.is-active{
+    opacity:1!important;
+  }
+  .motion-v7[data-phase="reveal"] .cp-copy__scene.is-active,
+  .motion-v7[data-phase="hold"] .cp-copy__scene.is-active,
+  .motion-v7[data-phase="exit"] .cp-copy__scene.is-active,
+  .motion-v7[data-phase="reveal"] .cp-image.is-active,
+  .motion-v7[data-phase="hold"] .cp-image.is-active,
+  .motion-v7[data-phase="exit"] .cp-image.is-active{
+    opacity:1!important;
+    transform:none!important;
+    filter:none!important;
+    animation:none!important;
+    transition:none!important;
+  }
+}
+
+/* Mobile only: prevent fixed stage widgets from leaking while scrolling. */
+@media (max-width:900px){
+  .motion-v7 .cp-main-cta,
+  .motion-v7 .cp-dev-times{
+    transition:none!important;
+    animation:none!important;
+    filter:none!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+  .motion-v7:not([data-stage="1"]) .cp-dev-times{
+    display:none!important;
+  }
+  .motion-v7:not([data-stage="2"]) .cp-main-cta{
+    display:none!important;
+  }
+  .motion-v7[data-stage="2"] .cp-copy__scene--2 .cp-main-cta{
+    display:inline-flex!important;
+    opacity:1!important;
+    filter:none!important;
+  }
+}
+
+/* Mobile only: final lock for first hero image position/size. */
+@media (max-width:900px){
+  .motion-v7 .cp-image--0,
+  .motion-v7 .cp-image--0.is-active,
+  .motion-v7[data-phase="reveal"] .cp-image--0.is-active,
+  .motion-v7[data-phase="hold"] .cp-image--0.is-active,
+  .motion-v7[data-phase="exit"] .cp-image--0.is-active{
+    transform:translate3d(0,5svh,0) scale(.85)!important;
+  }
+  .motion-v7 .cp-image--1,
+  .motion-v7 .cp-image--2,
+  .motion-v7 .cp-image--1.is-active,
+  .motion-v7 .cp-image--2.is-active,
+  .motion-v7[data-phase="reveal"] .cp-image--1.is-active,
+  .motion-v7[data-phase="reveal"] .cp-image--2.is-active,
+  .motion-v7[data-phase="hold"] .cp-image--1.is-active,
+  .motion-v7[data-phase="hold"] .cp-image--2.is-active,
+  .motion-v7[data-phase="exit"] .cp-image--1.is-active,
+  .motion-v7[data-phase="exit"] .cp-image--2.is-active{
+    transform:translate3d(0,0,0) scale(.85)!important;
   }
 }
