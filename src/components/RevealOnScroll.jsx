@@ -4,7 +4,9 @@ export default function RevealOnScroll(){
   useEffect(() => {
     const items = [...document.querySelectorAll('[data-reveal]')];
     if (!items.length) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const mobile = window.matchMedia('(max-width: 900px)').matches;
+    if (reducedMotion || mobile) {
       items.forEach(el => el.classList.add('is-visible'));
       return;
     }
