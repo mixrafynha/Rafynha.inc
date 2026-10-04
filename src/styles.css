@@ -5024,3 +5024,44 @@ footer.rf-footer,footer{
     contain:layout paint style;
   }
 }
+\n\n/* V8.1 — mobile hero image visibility hotfix */
+@media (max-width:900px){
+  .motion-v7 .cp-visual{
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    contain:none!important;
+    content-visibility:visible!important;
+  }
+  .motion-v7 .cp-image{
+    display:block!important;
+    visibility:visible!important;
+    opacity:0!important;
+    transform:translate3d(0,0,0) scale(.98)!important;
+    filter:none!important;
+    content-visibility:visible!important;
+    pointer-events:none!important;
+  }
+  .motion-v7 .cp-image.is-active,
+  .motion-v7[data-phase="reveal"] .cp-image.is-active,
+  .motion-v7[data-phase="hold"] .cp-image.is-active,
+  .motion-v7[data-phase="exit"] .cp-image.is-active{
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    transform:translate3d(0,0,0) scale(.98)!important;
+    filter:none!important;
+  }
+  .motion-v7 .cp-image img{
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    content-visibility:visible!important;
+    width:100%!important;
+    height:100%!important;
+    object-fit:contain!important;
+    object-position:center center!important;
+    transform:none!important;
+    filter:none!important;
+  }
+}

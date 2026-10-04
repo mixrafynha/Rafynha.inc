@@ -221,7 +221,7 @@ export default function HeroJourney(){
 
       <div className="cp-visual" aria-live="polite">
         {scenes.map((s,i)=><figure key={i} className={`cp-image cp-image--${i} ${i===stage?'is-active':''}`}>
-          <img src={s.image} alt={s.alt} width="1536" height="1024" draggable="false" loading={i===0?'eager':'lazy'} decoding="async" fetchPriority={i===0?'high':'auto'}/>
+          <img src={s.image} alt={s.alt} width="1536" height="1024" draggable="false" loading="eager" decoding="async" fetchPriority={i===0?'high':'auto'}/>
         </figure>)}
 
         <div className={`cp-code ${stage===1&&!optimizing?'is-visible':''}`} aria-hidden="true">
