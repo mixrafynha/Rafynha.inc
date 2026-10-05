@@ -1,4 +1,4 @@
-import { lazy, Suspense, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { projects } from '../projectsData.js';
 
@@ -7,9 +7,18 @@ const ProjectModal = lazy(() => import('./ProjectModal.jsx'));
 export default function ProjectOrbitShowcase() {
   const [active,setActive]=useState(null);
   const [showcaseIndex,setShowcaseIndex]=useState(0);
+  const [isMobile,setIsMobile]=useState(false);
   const dragRef=useRef({active:false,startX:0,lastX:0,dragged:false,cardIndex:null,cardActive:false});
   const featured=projects.slice(0,7);
   const showcaseProject=featured[showcaseIndex] || featured[0];
+
+  useEffect(()=>{
+    const query=window.matchMedia('(max-width: 900px)');
+    const sync=()=>setIsMobile(query.matches);
+    sync();
+    query.addEventListener?.('change',sync);
+    return()=>query.removeEventListener?.('change',sync);
+  },[]);
 
   const moveShowcase=(direction)=>{
     setShowcaseIndex((current)=>(current + direction + featured.length) % featured.length);
@@ -54,6 +63,7 @@ export default function ProjectOrbitShowcase() {
         {featured.map((p,i)=>{
           const offset=((i-showcaseIndex+featured.length+Math.floor(featured.length/2))%featured.length)-Math.floor(featured.length/2);
           const visible=Math.abs(offset)<=3;
+          if(isMobile && Math.abs(offset)>1) return null;
           return <article key={p.id} className="project-orbit-card" data-index={i} data-active={offset===0} data-visible={visible} data-pos={offset} style={{'--orbit-offset':offset}} onClick={()=>{if(dragRef.current.dragged) return; offset===0?setActive(p):setShowcaseIndex(i)}}>
             <div className="project-orbit-browser">
               <div className="project-orbit-bar"><strong>{p.title}</strong><span>{p.category}</span></div>

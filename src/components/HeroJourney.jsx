@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const scenes = [
@@ -63,6 +63,15 @@ export default function HeroJourney(){
   const [phase,setPhase] = useState('reveal');
   const [typed,setTyped] = useState(0);
   const [reviewIndex,setReviewIndex] = useState(0);
+  const [isMobile,setIsMobile] = useState(false);
+
+  useEffect(()=>{
+    const query=window.matchMedia('(max-width: 900px)');
+    const sync=()=>setIsMobile(query.matches);
+    sync();
+    query.addEventListener?.('change',sync);
+    return()=>query.removeEventListener?.('change',sync);
+  },[]);
 
   useLayoutEffect(()=>{
     const timer=window.setInterval(()=>{
@@ -210,7 +219,7 @@ export default function HeroJourney(){
             </div>}
             {i===2 && <Link className="cp-main-cta" to="/contact">CREATE YOUR WEBSITE <i>↗</i></Link>}
           </div>
-          {i===0 && <div className="cp-google-review" aria-label="Google client review">
+          {i===0 && !isMobile && <div className="cp-google-review" aria-label="Google client review">
             <div className="cp-review-track">
               <div className="cp-review-slide" key={reviews[reviewIndex].name}>
                 <img src={reviews[reviewIndex].avatar} alt={`${reviews[reviewIndex].name} avatar`} width="56" height="56" loading="lazy" decoding="async"/>
@@ -228,35 +237,38 @@ export default function HeroJourney(){
       </div>
 
       <div className="cp-visual" aria-live="polite">
-        {scenes.map((s,i)=><figure key={i} className={`cp-image cp-image--${i} ${i===stage?'is-active':''}`}>
-          <img src={s.image} alt={s.alt} width="1536" height="1024" draggable="false" loading="eager" decoding="async" fetchPriority={i===0?'high':'auto'}/>
-        </figure>)}
+        {scenes.map((s,i)=>{
+          if(isMobile && Math.abs(i-stage)>1) return null;
+          return <figure key={i} className={`cp-image cp-image--${i} ${i===stage?'is-active':''}`}>
+            <img src={s.image} alt={s.alt} width="1536" height="1024" draggable="false" loading={i===0?'eager':'lazy'} decoding="async" fetchPriority={i===0?'high':'auto'}/>
+          </figure>;
+        })}
 
-        <div className={`cp-code ${stage===1&&!optimizing?'is-visible':''}`} aria-hidden="true">
+        {!isMobile && <div className={`cp-code ${stage===1&&!optimizing?'is-visible':''}`} aria-hidden="true">
           <div className="cp-code__bar"><span>src / Home.jsx</span><i/><i/><i/></div>
           {code.map((line,i)=><div className={`cp-code__line ${i<typed?'is-typed':''}`} key={line}><b>{String(i+1).padStart(2,'0')}</b><code>{line}</code>{i===typed-1&&stage===1&&!optimizing&&<em/>}</div>)}
-        </div>
+        </div>}
 
-        <div className={`cp-audit ${optimizing?'is-visible':''}`} aria-hidden="true">
+        {!isMobile && <div className={`cp-audit ${optimizing?'is-visible':''}`} aria-hidden="true">
           <small>READY TO PERFORM</small>
           <div><span>Performance</span><b>98</b></div><div><span>SEO</span><b>100</b></div><div><span>Accessibility</span><b>100</b></div>
           <p>OPTIMIZED FOR LAUNCH <i>✓</i></p>
-        </div>
+        </div>}
 
-        <div className={`cp-live ${stage===2&&phase!=='reveal'?'is-visible':''}`} aria-hidden="true"><i/> LIVE <span>rafynha.com</span></div>
-        <div className={`cp-person-alert ${stage===0?'is-visible':''}`} aria-hidden="true">
+        {!isMobile && <div className={`cp-live ${stage===2&&phase!=='reveal'?'is-visible':''}`} aria-hidden="true"><i/> LIVE <span>rafynha.com</span></div>}
+        {!isMobile && <div className={`cp-person-alert ${stage===0?'is-visible':''}`} aria-hidden="true">
           <span>New project</span>
           <strong>Alex wants a launch page</strong>
-        </div>
+        </div>}
       </div>
 
-      <div className={`cp-mobile-review ${stage===0?'is-visible':''}`} aria-label="Client review">
+      {isMobile && <div className={`cp-mobile-review ${stage===0?'is-visible':''}`} aria-label="Client review">
         <img src={reviews[reviewIndex].avatar} alt={`${reviews[reviewIndex].name} avatar`} width="42" height="42" loading="lazy" decoding="async"/>
         <div>
           <strong>{reviews[reviewIndex].name}<span>★★★★★</span></strong>
           <p>“{reviews[reviewIndex].text}”</p>
         </div>
-      </div>
+      </div>}
     </div>
   </section>
 }
