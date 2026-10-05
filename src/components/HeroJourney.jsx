@@ -201,9 +201,9 @@ export default function HeroJourney(){
           <div className="cp-copy__foot">
             <p>{s.text}</p>
             {i===1 && <div className="cp-dev-times" aria-label="Development timeline">
-              <span><b>01</b> Design · 3-5 days</span>
-              <span><b>02</b> Build · 1-2 weeks</span>
-              <span><b>03</b> Launch · 24h</span>
+              <span><img src="/services/rafynha-orbit-brand.webp" alt="" loading="lazy" decoding="async"/><b>Design</b></span>
+              <span><img src="/services/web-experience-window.webp" alt="" loading="lazy" decoding="async"/><b>Build</b></span>
+              <span><img src="/services/mobile-dashboard.webp" alt="" loading="lazy" decoding="async"/><b>Launch</b></span>
             </div>}
             {i===2 && <Link className="cp-main-cta" to="/contact">CREATE YOUR WEBSITE <i>↗</i></Link>}
           </div>

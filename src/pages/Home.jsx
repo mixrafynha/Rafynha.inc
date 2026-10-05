@@ -11,10 +11,10 @@ export default function Home(){
  const dragRef=useRef({active:false,startX:0,lastX:0,dragged:false,cardIndex:null,cardActive:false});
  const featured=projects.slice(0,7);
  const serviceVisuals=[
-  {src:'/services/rafynha-orbit-brand.webp',alt:'Rafynha brand system in orbit',title:'Brand strategy',features:['Stand out','Build trust','Make an impact']},
-  {src:'/services/web-experience-window.webp',alt:'Website interface concept in space',title:'Web design',features:['Built for your brand','Fast & responsive','Made to convert']},
-  {src:'/services/seo-growth-search.webp',alt:'SEO growth search interface',title:'SEO & growth',features:['Get found','Rank higher','Reach more clients']},
-  {src:'/services/mobile-dashboard.webp',alt:'Mobile dashboard concept',title:'Convert & scale',features:['Mobile-first','Turn clicks into clients','Grow your business']}
+  {src:'/services/rafynha-orbit-brand.webp',alt:'Rafynha brand system in orbit',title:'Clear brand',features:['Look premium','Earn trust','Stand apart']},
+  {src:'/services/web-experience-window.webp',alt:'Website interface concept in space',title:'Sharp website',features:['Fast pages','Clean design','Easy to use']},
+  {src:'/services/seo-growth-search.webp',alt:'SEO growth search interface',title:'Get found',features:['SEO ready','Rank higher','More traffic']},
+  {src:'/services/mobile-dashboard.webp',alt:'Mobile dashboard concept',title:'More leads',features:['Mobile-first','Better clicks','Real growth']}
  ];
  const showcaseProject=featured[showcaseIndex] || featured[0];
  const moveShowcase=(direction)=>{
