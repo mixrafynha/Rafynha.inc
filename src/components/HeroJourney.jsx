@@ -125,7 +125,7 @@ export default function HeroJourney(){
     };
 
     const getProgress=()=>{
-      const activeTravel=mobile?metrics.travel*.78:metrics.travel;
+      const activeTravel=mobile?metrics.travel*.52:metrics.travel;
       return clamp((window.scrollY-metrics.top)/activeTravel);
     };
 

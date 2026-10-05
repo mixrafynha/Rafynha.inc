@@ -148,6 +148,27 @@ body:has(.projects-page) .rf-simple-links a{font-size:12px!important;letter-spac
   }
 }
 
+/* Mobile only: no blur or heavy reveal in services cards. */
+@media (max-width:900px){
+  .services-preview .service-mobile-card,
+  .services-preview .service-visual-panel{
+    opacity:1!important;
+    transform:none!important;
+    filter:none!important;
+    transition:none!important;
+    animation:none!important;
+  }
+  .services-preview .service-mobile-card img,
+  .services-preview .service-visual-panel img{
+    filter:none!important;
+    transform:none!important;
+    animation:none!important;
+  }
+  .services-preview .service-mobile-card:after{
+    background:linear-gradient(0deg,rgba(2,5,10,.72),rgba(2,5,10,.04) 62%)!important;
+  }
+}
+
 /* Mobile only: final Grow color lock. */
 @media (max-width:900px){
   .motion-v7 .cp-copy__scene--2 h1 em,
@@ -162,6 +183,27 @@ body:has(.projects-page) .rf-simple-links a{font-size:12px!important;letter-spac
   .motion-v7[data-stage="2"] .cp-visual .cp-image--2,
   .motion-v7[data-stage="2"] .cp-visual .cp-image--2.is-active{
     transform:translate3d(0,-1svh,0) scale(.91)!important;
+  }
+}
+
+/* Mobile only: final no-blur services lock. */
+@media (max-width:900px){
+  .services-preview .service-mobile-card,
+  .services-preview .service-visual-panel{
+    opacity:1!important;
+    transform:none!important;
+    filter:none!important;
+    transition:none!important;
+    animation:none!important;
+  }
+  .services-preview .service-mobile-card img,
+  .services-preview .service-visual-panel img{
+    filter:none!important;
+    transform:none!important;
+    animation:none!important;
+  }
+  .services-preview .service-mobile-card:after{
+    background:linear-gradient(0deg,rgba(2,5,10,.72),rgba(2,5,10,.04) 62%)!important;
   }
 }
 
@@ -6247,5 +6289,26 @@ footer.rf-footer,footer{
   .motion-v7[data-stage="2"] .cp-visual .cp-image--2,
   .motion-v7[data-stage="2"] .cp-visual .cp-image--2.is-active{
     transform:translate3d(0,-1svh,0) scale(.91)!important;
+  }
+}
+
+/* Mobile only: final no-blur services lock. */
+@media (max-width:900px){
+  .services-preview .service-mobile-card,
+  .services-preview .service-visual-panel{
+    opacity:1!important;
+    transform:none!important;
+    filter:none!important;
+    transition:none!important;
+    animation:none!important;
+  }
+  .services-preview .service-mobile-card img,
+  .services-preview .service-visual-panel img{
+    filter:none!important;
+    transform:none!important;
+    animation:none!important;
+  }
+  .services-preview .service-mobile-card:after{
+    background:linear-gradient(0deg,rgba(2,5,10,.72),rgba(2,5,10,.04) 62%)!important;
   }
 }
