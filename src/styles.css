@@ -113,12 +113,55 @@ body:has(.projects-page) .rf-simple-links a{font-size:12px!important;letter-spac
   .projects-page .portfolio-card:hover .portfolio-preview img{transform:none!important}
 }
 
+/* Mobile only: final Grow image size lock. */
+@media (max-width:900px){
+  .motion-v7[data-stage="2"] .cp-visual .cp-image--2,
+  .motion-v7[data-stage="2"] .cp-visual .cp-image--2.is-active{
+    transform:translate3d(0,-1svh,0) scale(.89)!important;
+  }
+}
+
+/* Mobile only: final Grow heading/subtitle spacing lock. */
+@media (max-width:900px){
+  .motion-v7 .cp-copy__scene--2 .cp-copy__foot{
+    margin-top:5px!important;
+  }
+  .motion-v7 .cp-copy__scene--2 .cp-copy__foot p{
+    font-size:14px!important;
+    line-height:1.28!important;
+  }
+}
+
+/* Mobile only: faster thumb scroll for the three-step hero. */
+@media (max-width:900px){
+  .cinematic-process--three{
+    height:185svh!important;
+  }
+  .cinematic-process--three .cinematic-process__sticky{
+    height:100svh!important;
+    overflow:hidden!important;
+  }
+  .motion-v7 .cp-copy__scene,
+  .motion-v7 .cp-image{
+    transition:opacity .18s ease!important;
+    filter:none!important;
+  }
+}
+
 /* Mobile only: final Grow color lock. */
 @media (max-width:900px){
   .motion-v7 .cp-copy__scene--2 h1 em,
   .motion-v7[data-stage="2"] .cp-copy__scene--2 h1 em{
-    color:#ff7a2f!important;
-    text-shadow:0 10px 24px rgba(255,122,47,.20)!important;
+    color:#2563eb!important;
+    text-shadow:0 10px 24px rgba(37,99,235,.20)!important;
+  }
+}
+
+/* Mobile only: final Grow image size lock. */
+@media (max-width:900px){
+  .motion-v7[data-stage="2"] .cp-visual .cp-image--2,
+  .motion-v7[data-stage="2"] .cp-visual .cp-image--2.is-active{
+    transform:translate3d(0,-1svh,0) scale(.91)!important;
   }
 }
 
@@ -5539,7 +5582,7 @@ footer.rf-footer,footer{
   }
   .motion-v7 .cp-copy__scene--1 .cp-dev-times b{
     display:block!important;
-    color:#ff7a2f!important;
+    color:#2563eb!important;
     font-weight:900!important;
   }
 }
@@ -6194,7 +6237,15 @@ footer.rf-footer,footer{
 @media (max-width:900px){
   .motion-v7 .cp-copy__scene--2 h1 em,
   .motion-v7[data-stage="2"] .cp-copy__scene--2 h1 em{
-    color:#ff7a2f!important;
-    text-shadow:0 10px 24px rgba(255,122,47,.20)!important;
+    color:#2563eb!important;
+    text-shadow:0 10px 24px rgba(37,99,235,.20)!important;
+  }
+}
+
+/* Mobile only: final Grow image size lock. */
+@media (max-width:900px){
+  .motion-v7[data-stage="2"] .cp-visual .cp-image--2,
+  .motion-v7[data-stage="2"] .cp-visual .cp-image--2.is-active{
+    transform:translate3d(0,-1svh,0) scale(.91)!important;
   }
 }

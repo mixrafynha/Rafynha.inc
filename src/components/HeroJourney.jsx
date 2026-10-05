@@ -89,10 +89,10 @@ export default function HeroJourney(){
       if(snap || !initialized){smooth.current=p;initialized=true}
       const current=snap?p:smooth.current;
       const scaled=current*3;
-      const s=Math.min(2,Math.floor(Math.min(scaled,2.9999)));
+      const s=mobile?Math.min(2,Math.round(current*2)):Math.min(2,Math.floor(Math.min(scaled,2.9999)));
       const l=clamp(scaled-s);
-      const ph=l<.18?'reveal':l<.76?'hold':'exit';
-      const typeCount=s===1?Math.max(0,Math.min(code.length,Math.floor(clamp((l-.16)/.42)*(code.length+1)))):(s>1?code.length:0);
+      const ph=mobile?'hold':(l<.18?'reveal':l<.76?'hold':'exit');
+      const typeCount=mobile?(s>=1?code.length:0):(s===1?Math.max(0,Math.min(code.length,Math.floor(clamp((l-.16)/.42)*(code.length+1)))):(s>1?code.length:0));
       el.dataset.navTheme=s===2?'lime':'light';
 
       // Mobile intentionally avoids per-frame DOM/style work. The active scene class
@@ -124,7 +124,10 @@ export default function HeroJourney(){
       if(typeCount!==lastTyped){lastTyped=typeCount;setTyped(typeCount)}
     };
 
-    const getProgress=()=>clamp((window.scrollY-metrics.top)/metrics.travel);
+    const getProgress=()=>{
+      const activeTravel=mobile?metrics.travel*.78:metrics.travel;
+      return clamp((window.scrollY-metrics.top)/activeTravel);
+    };
 
     const tick=()=>{
       const delta=target.current-smooth.current;
