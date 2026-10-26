@@ -230,15 +230,15 @@ export default function HeroJourney(){
           const opacityValue=opacity.toFixed(3);
           if(lastMobileTransform[index]!==transform){
             lastMobileTransform[index]=transform;
-            scene.style.setProperty('transform',transform,'important');
+            scene.style.setProperty('--hero-mobile-transform',transform);
           }
           if(lastMobileOpacity[index]!==opacityValue){
             lastMobileOpacity[index]=opacityValue;
-            scene.style.setProperty('opacity',opacityValue,'important');
+            scene.style.setProperty('--hero-mobile-opacity',opacityValue);
           }
-          scene.style.setProperty('clip-path',clip,'important');
-          scene.style.setProperty('filter',filter,'important');
-          scene.style.setProperty('border-radius',radius,'important');
+          scene.style.setProperty('--hero-mobile-clip',clip);
+          scene.style.setProperty('--hero-mobile-filter',filter);
+          scene.style.setProperty('--hero-mobile-radius',radius);
         });
       }
       const l=clamp(scaled-s);

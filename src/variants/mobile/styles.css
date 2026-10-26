@@ -8256,3 +8256,20 @@ body .work-cinema.project-orbit-showcase .project-orbit-heading span{
     will-change:opacity,transform!important;
   }
 }
+
+
+/* Hero animation selector fix: mobile CSS previously masked ?heroAnim=1..10. */
+@media (max-width:699px){
+  html body .motion-v7.cinematic-process--three .cp-copy__scene,
+  html body .motion-v7.cinematic-process--three .cp-copy__scene.is-active,
+  html body .motion-v7.cinematic-process--three .cp-copy__scene:not(.is-active){
+    transform:var(--hero-mobile-transform,translate3d(0,0,0))!important;
+    opacity:var(--hero-mobile-opacity,1)!important;
+    clip-path:var(--hero-mobile-clip,inset(0 0 0 0))!important;
+    filter:var(--hero-mobile-filter,none)!important;
+    border-radius:var(--hero-mobile-radius,0)!important;
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+    will-change:transform,opacity,clip-path;
+  }
+}
