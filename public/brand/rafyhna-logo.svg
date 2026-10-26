@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 120" role="img" aria-labelledby="title">
+  <title id="title">RAFYHNA.</title>
+  <g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="square" stroke-linejoin="miter">
+    <!-- R -->
+    <path d="M18 94V26H58C76 26 86 35 86 48S76 70 58 70H18M57 70L91 94"/>
+    <!-- A -->
+    <path d="M116 94L150 26L184 94M128 72H172"/>
+    <!-- F -->
+    <path d="M213 94V26H267M213 58H258"/>
+    <!-- Y -->
+    <path d="M292 26L324 60L356 26M324 60V94"/>
+    <!-- H -->
+    <path d="M386 26V94M438 26V94M386 60H438"/>
+    <!-- N -->
+    <path d="M470 94V26L528 94V26"/>
+    <!-- A -->
+    <path d="M556 94L590 26L624 94M568 72H612"/>
+  </g>
+  <circle cx="664" cy="91" r="6" fill="currentColor"/>
+</svg>
