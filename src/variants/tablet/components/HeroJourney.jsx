@@ -124,10 +124,10 @@ export default function HeroJourney(){
       const current=snap?p:smooth.current;
       const scaled=current*3;
       const s=mobile
-        ? (current<.40?0:(current<.80?1:2))
+        ? (current<.34?0:(current<.68?1:2))
         : Math.min(2,Math.floor(Math.min(scaled,2.9999)));
       if(mobile){
-        el.style.setProperty('height','170svh','important');
+        el.style.setProperty('height','152svh','important');
       }
       const l=clamp(scaled-s);
       const ph=mobile?'hold':(l<.18?'reveal':l<.76?'hold':'exit');
@@ -290,7 +290,7 @@ export default function HeroJourney(){
     };
 
     const getProgress=()=>{
-      const activeTravel=mobile?Math.min(metrics.travel,(window.visualViewport?.height||window.innerHeight)*.52):metrics.travel;
+      const activeTravel=mobile?Math.min(metrics.travel,(window.visualViewport?.height||window.innerHeight)*.62):metrics.travel;
       return clamp((window.scrollY-metrics.top)/activeTravel);
     };
 

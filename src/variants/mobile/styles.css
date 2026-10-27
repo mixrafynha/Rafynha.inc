@@ -8257,7 +8257,7 @@ body .work-cinema.project-orbit-showcase .project-orbit-heading span{
   }
 }
 
-/* Physical-mobile compositor hardening for the 20 HeroJourney variants. */
+/* Physical-mobile compositor hardening for the Hero scroll transition. */
 @media (max-width:699px){
   html body .motion-v7.cinematic-process--three .cp-copy__scene{
     backface-visibility:hidden!important;
@@ -8267,3 +8267,6 @@ body .work-cinema.project-orbit-showcase .project-orbit-heading span{
     contain:paint!important;
   }
 }
+
+/* Mobile hero: single faster vertical cover transition */
+@media (max-width:699px){.cinematic-process--three{height:320vh!important}}

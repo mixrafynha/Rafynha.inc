@@ -865,14 +865,14 @@ body:has(.projects-page) .rf-simple-links a{font-size:12px!important;letter-spac
     line-height:1.28!important;
   }}
 @media (max-width:900px){.cinematic-process--three{
-    height:185svh!important;
+    height:152svh!important;
   }
 .cinematic-process--three .cinematic-process__sticky{
     height:100svh!important;
     overflow:hidden!important;
   }
 .motion-v7 .cp-copy__scene,.motion-v7 .cp-image{
-    transition:opacity .18s ease!important;
+    transition:opacity .13s cubic-bezier(.22,.8,.2,1)!important;
     filter:none!important;
   }}
 @media (max-width:900px){.services-preview .service-mobile-card,.services-preview .service-visual-panel{
@@ -10014,4 +10014,16 @@ body .work-cinema.project-orbit-showcase .project-orbit-heading span{
   box-shadow:0 0 0 8vw rgba(11,13,18,.025),0 0 0 16vw rgba(11,13,18,.018);
   animation:ctaOrbit 16s linear infinite;
   pointer-events:none;
+}
+
+/* Mobile hero: single clean transition — fast, compositor-friendly, no test variants. */
+@media (max-width:699px){
+  .cinematic-process--three{height:152svh!important;}
+  .motion-v7 .cp-copy__scene,.motion-v7 .cp-image{
+    transition:opacity .13s cubic-bezier(.22,.8,.2,1)!important;
+    will-change:opacity;
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+  }
+  .motion-v7 .cp-copy__scene:not(.is-active),.motion-v7 .cp-image:not(.is-active){pointer-events:none;}
 }

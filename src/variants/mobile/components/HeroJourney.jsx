@@ -146,96 +146,23 @@ export default function HeroJourney(){
         const cover=(value)=>clamp((current-value)/.42);
         const coverThird=(value)=>clamp((current-value)/.34);
         const ease=(value)=>value*value*(3-(2*value));
-        const heroAnim=Math.max(1,Math.min(20,Number(new URLSearchParams(window.location.search).get('heroAnim'))||1));
-        el.dataset.heroAnim=String(heroAnim);
+        // Single mobile transition: fast, smooth vertical cover.
         scenes.forEach((scene,index)=>{
-          const enter=index===0?1:(index===2?coverThird(.68):cover(.10));
-          const leave=index===2?0:(index===1?coverThird(.68):cover(.10));
+          const enter=index===0?1:(index===2?clamp((current-.66)/.26):clamp((current-.12)/.30));
+          const leave=index===2?0:(index===1?clamp((current-.66)/.26):clamp((current-.12)/.30));
+          // smootherstep: soft acceleration/deceleration without the heavy lag
+          const ease=(v)=>v*v*v*(v*(v*6-15)+10);
           const a=ease(enter);
           const b=ease(leave);
           const incoming=1-a;
           const outgoing=b;
-          let transform='translate3d(0,0,0)';
-          let opacity=1;
-          let clip='inset(0 0 0 0)';
-          let filter='none';
-          let radius='0px';
-
-          // Twenty physical-mobile-safe scroll transitions. All variants use the
-          // same proven compositor path as animation 1: translate3d / scale / rotate.
-          // Avoid clip-path, blur and perspective here because real iOS/Android browsers
-          // can rasterize those differently from desktop device emulation.
-          scene.style.setProperty('transform-origin','center center','important');
-          switch(heroAnim){
-            case 1: // vertical cover
-              transform=index===0?`translate3d(0,${(-outgoing*34).toFixed(1)}px,0) scale(${(1-outgoing*.025).toFixed(4)})`:`translate3d(0,${(incoming*100).toFixed(2)}svh,0)`;
-              break;
-            case 2: // slide from right
-              transform=index===0?`translate3d(${(-outgoing*22).toFixed(1)}vw,0,0) scale(${(1-outgoing*.035).toFixed(4)})`:`translate3d(${(incoming*100).toFixed(2)}vw,0,0)`;
-              break;
-            case 3: // slide from left
-              transform=index===0?`translate3d(${(outgoing*22).toFixed(1)}vw,0,0) scale(${(1-outgoing*.035).toFixed(4)})`:`translate3d(${(-incoming*100).toFixed(2)}vw,0,0)`;
-              break;
-            case 4: // zoom in
-              transform=index===0?`scale(${(1+outgoing*.22).toFixed(4)}) translate3d(0,${(-outgoing*3).toFixed(1)}vh,0)`:`scale(${(.72+a*.28).toFixed(4)}) translate3d(0,${(incoming*10).toFixed(1)}vh,0)`;
-              opacity=index===0?1-outgoing*.25:.55+a*.45;
-              break;
-            case 5: // zoom out
-              transform=index===0?`scale(${(1-outgoing*.18).toFixed(4)})`:`scale(${(1.28-incoming*.28).toFixed(4)}) translate3d(0,${(incoming*5).toFixed(1)}vh,0)`;
-              break;
-            case 6: // diagonal bottom-right
-              transform=index===0?`translate3d(${(-outgoing*18).toFixed(1)}vw,${(-outgoing*12).toFixed(1)}vh,0) rotate(${(-outgoing*3).toFixed(2)}deg)`:`translate3d(${(incoming*85).toFixed(1)}vw,${(incoming*82).toFixed(1)}vh,0) rotate(${(incoming*5).toFixed(2)}deg)`;
-              break;
-            case 7: // diagonal bottom-left
-              transform=index===0?`translate3d(${(outgoing*18).toFixed(1)}vw,${(-outgoing*12).toFixed(1)}vh,0) rotate(${(outgoing*3).toFixed(2)}deg)`:`translate3d(${(-incoming*85).toFixed(1)}vw,${(incoming*82).toFixed(1)}vh,0) rotate(${(-incoming*5).toFixed(2)}deg)`;
-              break;
-            case 8: { // soft spring rise
-              const spring=Math.sin(a*Math.PI)*incoming;
-              transform=index===0?`translate3d(0,${(-outgoing*15).toFixed(1)}vh,0) scale(${(1-outgoing*.06).toFixed(4)})`:`translate3d(0,${(incoming*96-spring*18).toFixed(1)}vh,0) scale(${(.9+a*.1+spring*.035).toFixed(4)})`;
-              break;
-            }
-            case 9: // card tilt right
-              transform=index===0?`translate3d(${(-outgoing*8).toFixed(1)}vw,${(-outgoing*7).toFixed(1)}vh,0) rotate(${(-outgoing*7).toFixed(2)}deg) scale(${(1-outgoing*.09).toFixed(4)})`:`translate3d(${(incoming*14).toFixed(1)}vw,${(incoming*88).toFixed(1)}vh,0) rotate(${(incoming*10).toFixed(2)}deg) scale(${(.88+a*.12).toFixed(4)})`;
-              break;
-            case 10: // card tilt left
-              transform=index===0?`translate3d(${(outgoing*8).toFixed(1)}vw,${(-outgoing*7).toFixed(1)}vh,0) rotate(${(outgoing*7).toFixed(2)}deg) scale(${(1-outgoing*.09).toFixed(4)})`:`translate3d(${(-incoming*14).toFixed(1)}vw,${(incoming*88).toFixed(1)}vh,0) rotate(${(-incoming*10).toFixed(2)}deg) scale(${(.88+a*.12).toFixed(4)})`;
-              break;
-            case 11: // push down from top
-              transform=index===0?`translate3d(0,${(outgoing*28).toFixed(1)}vh,0) scale(${(1-outgoing*.04).toFixed(4)})`:`translate3d(0,${(-incoming*100).toFixed(2)}svh,0)`;
-              break;
-            case 12: // squeeze then open
-              transform=index===0?`scale(${(1-outgoing*.16).toFixed(4)}) translate3d(0,${(-outgoing*8).toFixed(1)}vh,0)`:`translate3d(0,${(incoming*70).toFixed(1)}vh,0) scale(${(.72+a*.28).toFixed(4)})`;
-              break;
-            case 13: // rotate clockwise sweep
-              transform=index===0?`translate3d(${(-outgoing*12).toFixed(1)}vw,${(-outgoing*8).toFixed(1)}vh,0) rotate(${(-outgoing*12).toFixed(2)}deg) scale(${(1-outgoing*.08).toFixed(4)})`:`translate3d(${(incoming*58).toFixed(1)}vw,${(incoming*82).toFixed(1)}vh,0) rotate(${(incoming*18).toFixed(2)}deg)`;
-              break;
-            case 14: // rotate counter-clockwise sweep
-              transform=index===0?`translate3d(${(outgoing*12).toFixed(1)}vw,${(-outgoing*8).toFixed(1)}vh,0) rotate(${(outgoing*12).toFixed(2)}deg) scale(${(1-outgoing*.08).toFixed(4)})`:`translate3d(${(-incoming*58).toFixed(1)}vw,${(incoming*82).toFixed(1)}vh,0) rotate(${(-incoming*18).toFixed(2)}deg)`;
-              break;
-            case 15: // deep camera pull
-              transform=index===0?`translate3d(0,${(-outgoing*4).toFixed(1)}vh,0) scale(${(1-outgoing*.28).toFixed(4)})`:`translate3d(0,${(incoming*26).toFixed(1)}vh,0) scale(${(1.55-incoming*.55).toFixed(4)})`;
-              opacity=index===0?1-outgoing*.35:.45+a*.55;
-              break;
-            case 16: // fast right push + settle
-              transform=index===0?`translate3d(${(-outgoing*48).toFixed(1)}vw,0,0) scale(${(1-outgoing*.05).toFixed(4)})`:`translate3d(${(incoming*115).toFixed(1)}vw,${(incoming*8).toFixed(1)}vh,0) scale(${(.94+a*.06).toFixed(4)})`;
-              break;
-            case 17: // fast left push + settle
-              transform=index===0?`translate3d(${(outgoing*48).toFixed(1)}vw,0,0) scale(${(1-outgoing*.05).toFixed(4)})`:`translate3d(${(-incoming*115).toFixed(1)}vw,${(incoming*8).toFixed(1)}vh,0) scale(${(.94+a*.06).toFixed(4)})`;
-              break;
-            case 18: { // wave / sway
-              const sway=Math.sin(a*Math.PI)*12;
-              transform=index===0?`translate3d(${(-sway*outgoing).toFixed(1)}vw,${(-outgoing*12).toFixed(1)}vh,0) rotate(${(-sway*.22).toFixed(2)}deg)`:`translate3d(${(sway+incoming*18).toFixed(1)}vw,${(incoming*92).toFixed(1)}vh,0) rotate(${(sway*.28).toFixed(2)}deg)`;
-              break;
-            }
-            case 19: // floating card
-              transform=index===0?`translate3d(0,${(-outgoing*20).toFixed(1)}vh,0) rotate(${(outgoing*4).toFixed(2)}deg) scale(${(1-outgoing*.14).toFixed(4)})`:`translate3d(${(incoming*8).toFixed(1)}vw,${(incoming*76).toFixed(1)}vh,0) rotate(${(-incoming*6).toFixed(2)}deg) scale(${(.8+a*.2).toFixed(4)})`;
-              opacity=index===0?1-outgoing*.18:.65+a*.35;
-              break;
-            case 20: // cinematic combo
-              transform=index===0?`translate3d(${(-outgoing*14).toFixed(1)}vw,${(-outgoing*10).toFixed(1)}vh,0) rotate(${(-outgoing*4).toFixed(2)}deg) scale(${(1+outgoing*.12).toFixed(4)})`:`translate3d(${(incoming*28).toFixed(1)}vw,${(incoming*88).toFixed(1)}vh,0) rotate(${(incoming*7).toFixed(2)}deg) scale(${(.7+a*.3).toFixed(4)})`;
-              opacity=index===0?1-outgoing*.3:.5+a*.5;
-              break;
-          }
+          const transform=index===0
+            ? `translate3d(0,${(-outgoing*26).toFixed(1)}px,0) scale(${(1-outgoing*.018).toFixed(4)})`
+            : `translate3d(0,${(incoming*100).toFixed(2)}svh,0)`;
+          const opacity=1;
+          const clip='inset(0 0 0 0)';
+          const filter='none';
+          const radius='0px';
 
           const opacityValue=opacity.toFixed(3);
           if(lastMobileTransform[index]!==transform){
@@ -427,7 +354,7 @@ export default function HeroJourney(){
 
     const tick=()=>{
       const delta=target.current-smooth.current;
-      smooth.current += delta*(tablet?.42:mobile?.20:.14);
+      smooth.current += delta*(tablet?.42:mobile?.30:.14);
       if(Math.abs(delta)<.00045) smooth.current=target.current;
       paint(smooth.current);
       if(Math.abs(target.current-smooth.current)>.00045 && visible) raf=requestAnimationFrame(tick);
