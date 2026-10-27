@@ -422,7 +422,7 @@ export default function HeroJourney(){
       <div className="cp-copy">
         {scenes.map((s,i)=><article key={s.n} className={`cp-copy__scene cp-copy__scene--${i} ${i===stage?'is-active':''}`}>
           <div className="cp-eyebrow"><b>{s.n}</b><span>{s.eyebrow}</span></div>
-          {i===0 ? <h1>{s.title}</h1> : <h2>{s.title}</h2>}
+          {i===0 ? <h1><span className="cp-title-write">{s.title}</span></h1> : <h2><span className="cp-title-write">{s.title}</span></h2>}
           <div className="cp-copy__foot">
             <p>{s.text}</p>
             {i===1 && <div className="cp-dev-times" aria-label="Development timeline">

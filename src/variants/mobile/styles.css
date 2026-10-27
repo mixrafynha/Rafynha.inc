@@ -8335,3 +8335,32 @@ body .work-cinema.project-orbit-showcase .project-orbit-heading span{
     transition:none!important;
   }
 }
+
+
+/* MOBILE HERO — lightweight title write/reveal.
+   Runs only when the stage changes; no JS animation loop and no filters. */
+@media (max-width:699px){
+  .motion-v7 .cp-copy__scene h1,
+  .motion-v7 .cp-copy__scene h2{
+    overflow:hidden!important;
+    contain:paint!important;
+  }
+  .motion-v7 .cp-title-write{
+    display:inline-block!important;
+    opacity:1;
+    transform:translate3d(0,0,0);
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+  }
+  .motion-v7 .cp-copy__scene.is-active .cp-title-write{
+    animation:cpTitleWriteLight 260ms cubic-bezier(.2,.78,.24,1) both!important;
+  }
+  @keyframes cpTitleWriteLight{
+    0%{opacity:.12;transform:translate3d(-12px,0,0);clip-path:inset(0 100% 0 0)}
+    58%{opacity:1}
+    100%{opacity:1;transform:translate3d(0,0,0);clip-path:inset(0 0 0 0)}
+  }
+}
+@media (prefers-reduced-motion:reduce){
+  .motion-v7 .cp-copy__scene.is-active .cp-title-write{animation:none!important}
+}
