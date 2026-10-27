@@ -8270,3 +8270,16 @@ body .work-cinema.project-orbit-showcase .project-orbit-heading span{
 
 /* Mobile hero: single faster vertical cover transition */
 @media (max-width:699px){.cinematic-process--three{height:320vh!important}}
+
+/* Mobile hero performance pass: single cheap compositor animation. */
+@media (max-width:900px){
+  .cinematic-process--three.motion-v7{height:165svh!important;min-height:0!important;}
+  .motion-v7 .cp-copy__scene{
+    transition:none!important;filter:none!important;clip-path:none!important;
+    border-radius:0!important;will-change:transform!important;
+    backface-visibility:hidden!important;-webkit-backface-visibility:hidden!important;
+    contain:layout paint!important;
+  }
+  .motion-v7 .cp-copy__scene.is-active{filter:none!important;}
+  .motion-v7 .cp-ambient:after{display:none!important;}
+}

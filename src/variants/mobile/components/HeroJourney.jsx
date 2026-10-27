@@ -137,45 +137,26 @@ export default function HeroJourney(){
         : Math.min(2,Math.floor(Math.min(scaled,2.9999)));
       if(mobile){
         const scenes=sceneNodes;
-        // Each scene is a full-screen cover. The next one physically rises over
-        // the previous scene; the previous scene fades over a longer interval.
-        // This keeps the page scroll continuous instead of handing off to a new
-        // normal-flow section on touch devices.
-        // Give each cover enough scroll distance to be visibly traced from the
-        // bottom of the viewport to the top instead of looking like a swap.
-        const cover=(value)=>clamp((current-value)/.42);
-        const coverThird=(value)=>clamp((current-value)/.34);
-        const ease=(value)=>value*value*(3-(2*value));
-        // Single mobile transition: fast, smooth vertical cover.
-        scenes.forEach((scene,index)=>{
-          const enter=index===0?1:(index===2?clamp((current-.66)/.26):clamp((current-.12)/.30));
-          const leave=index===2?0:(index===1?clamp((current-.66)/.26):clamp((current-.12)/.30));
-          // smootherstep: soft acceleration/deceleration without the heavy lag
-          const ease=(v)=>v*v*v*(v*(v*6-15)+10);
-          const a=ease(enter);
-          const b=ease(leave);
-          const incoming=1-a;
-          const outgoing=b;
-          const transform=index===0
-            ? `translate3d(0,${(-outgoing*26).toFixed(1)}px,0) scale(${(1-outgoing*.018).toFixed(4)})`
-            : `translate3d(0,${(incoming*100).toFixed(2)}svh,0)`;
-          const opacity=1;
-          const clip='inset(0 0 0 0)';
-          const filter='none';
-          const radius='0px';
+        // Physical-mobile fast path: one compositor transform on the incoming
+        // scene only. No blur, clip-path, scale, opacity animation or trailing
+        // smoothing loop. This keeps each scroll frame cheap on mobile GPUs.
+        const smoothstep=(v)=>v*v*(3-2*v);
+        const first=smoothstep(clamp((current-.08)/.18));
+        const second=smoothstep(clamp((current-.50)/.18));
+        const progress=[1,first,second];
+        const vh=Math.max(window.innerHeight||0, 1);
 
-          const opacityValue=opacity.toFixed(3);
+        scenes.forEach((scene,index)=>{
+          const y=index===0?0:(1-progress[index])*vh;
+          const transform=`translate3d(0,${y.toFixed(1)}px,0)`;
           if(lastMobileTransform[index]!==transform){
             lastMobileTransform[index]=transform;
             scene.style.setProperty('transform',transform,'important');
           }
-          if(lastMobileOpacity[index]!==opacityValue){
-            lastMobileOpacity[index]=opacityValue;
-            scene.style.setProperty('opacity',opacityValue,'important');
+          if(lastMobileOpacity[index]!=='1'){
+            lastMobileOpacity[index]='1';
+            scene.style.setProperty('opacity','1','important');
           }
-          scene.style.setProperty('clip-path',clip,'important');
-          scene.style.setProperty('filter',filter,'important');
-          scene.style.setProperty('border-radius',radius,'important');
         });
       }
       const l=clamp(scaled-s);
@@ -266,7 +247,7 @@ export default function HeroJourney(){
       if(mobile && !mobileStaticApplied){
         const firstTitle=el.querySelector('.cp-copy__scene--0 h1');
         if(firstTitle){
-          el.style.setProperty('height','360svh','important');
+          el.style.setProperty('height','230svh','important');
           sceneParts.forEach(({scene,image},index)=>{
             scene.style.setProperty('z-index',String(10+index),'important');
             scene.style.setProperty('visibility','visible','important');
@@ -366,13 +347,10 @@ export default function HeroJourney(){
       if(!initialized){paint(target.current,true);return}
       if(!visible) return;
       if(mobile){
-        // Keep the cover movement animated on touch. Snapping directly to the
-        // scroll value makes the next scene appear instead of rising over the
-        // previous one.
-        if(!running.current){
-          running.current=true;
-          raf=requestAnimationFrame(tick);
-        }
+        // Native scrolling already provides the timing. Paint once per scroll
+        // event instead of running an extra interpolation loop behind the finger.
+        smooth.current=target.current;
+        paint(target.current);
         return;
       }
       if(!running.current){running.current=true;raf=requestAnimationFrame(tick)}
