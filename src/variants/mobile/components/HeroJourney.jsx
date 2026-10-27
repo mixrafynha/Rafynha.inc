@@ -109,7 +109,8 @@ export default function HeroJourney(){
     let mobile=window.matchMedia('(max-width: 699px)').matches;
     let tablet=window.matchMedia('(min-width: 700px) and (max-width: 1180px)').matches;
     let compact=mobile||tablet;
-    let metrics={top:0,travel:1};
+    let metrics={top:0,travel:1,vh:1};
+    let scrollRaf=0;
     let initialized=false;
     let mobileStaticApplied=false;
     const lastMobileTransform=['','',''];
@@ -125,7 +126,8 @@ export default function HeroJourney(){
     const measure=()=>{
       const rect=el.getBoundingClientRect();
       metrics.top=window.scrollY+rect.top;
-      metrics.travel=Math.max(1,el.offsetHeight-window.innerHeight);
+      metrics.vh=Math.max(window.innerHeight||document.documentElement.clientHeight||1,1);
+      metrics.travel=Math.max(1,el.offsetHeight-metrics.vh);
     };
 
     const paint=(p, snap=false)=>{
@@ -144,7 +146,7 @@ export default function HeroJourney(){
         const first=smoothstep(clamp((current-.08)/.18));
         const second=smoothstep(clamp((current-.50)/.18));
         const progress=[1,first,second];
-        const vh=Math.max(window.innerHeight||0, 1);
+        const vh=metrics.vh;
 
         scenes.forEach((scene,index)=>{
           const y=index===0?0:(1-progress[index])*vh;
@@ -247,14 +249,14 @@ export default function HeroJourney(){
       if(mobile && !mobileStaticApplied){
         const firstTitle=el.querySelector('.cp-copy__scene--0 h1');
         if(firstTitle){
-          el.style.setProperty('height','230svh','important');
+          el.style.setProperty('height','210svh','important');
           sceneParts.forEach(({scene,image},index)=>{
             scene.style.setProperty('z-index',String(10+index),'important');
             scene.style.setProperty('visibility','visible','important');
             image?.style.setProperty('opacity','1','important');
             image?.style.setProperty('visibility','visible','important');
             image?.style.setProperty('filter','none','important');
-            image?.style.setProperty('transform',index===2?'translateY(20%) scale(1.40)':index===1?'translateY(15%) scale(1.35)':'none','important');
+            image?.style.setProperty('transform',index===2?'translateY(10%) scale(1.12)':index===1?'translateY(8%) scale(1.10)':'none','important');
           });
           const firstTitleStyle=getComputedStyle(firstTitle);
           el.querySelectorAll('.cp-copy__scene--1 h2,.cp-copy__scene--2 h2').forEach((title)=>{
@@ -347,10 +349,16 @@ export default function HeroJourney(){
       if(!initialized){paint(target.current,true);return}
       if(!visible) return;
       if(mobile){
-        // Native scrolling already provides the timing. Paint once per scroll
-        // event instead of running an extra interpolation loop behind the finger.
-        smooth.current=target.current;
-        paint(target.current);
+        // One visual update per display frame. Real phones can dispatch many
+        // scroll events between frames; painting every event wastes GPU/CPU and
+        // is the main source of title judder.
+        if(scrollRaf) return;
+        scrollRaf=requestAnimationFrame(()=>{
+          scrollRaf=0;
+          target.current=getProgress();
+          smooth.current=target.current;
+          paint(target.current);
+        });
         return;
       }
       if(!running.current){running.current=true;raf=requestAnimationFrame(tick)}
@@ -401,6 +409,7 @@ export default function HeroJourney(){
       window.removeEventListener('pageshow',onPageShow);
       window.removeEventListener('load',onLoad);
       if(raf)cancelAnimationFrame(raf);
+      if(scrollRaf)cancelAnimationFrame(scrollRaf);
     };
   },[]);
 

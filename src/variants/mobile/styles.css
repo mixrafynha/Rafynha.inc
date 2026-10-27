@@ -8283,3 +8283,55 @@ body .work-cinema.project-orbit-showcase .project-orbit-heading span{
   .motion-v7 .cp-copy__scene.is-active{filter:none!important;}
   .motion-v7 .cp-ambient:after{display:none!important;}
 }
+
+/* MOBILE HERO — maximum-light compositor path (physical devices) */
+@media (max-width:699px){
+  .motion-v7.cinematic-process--three{height:210svh!important;contain:layout paint style}
+  .motion-v7 .cinematic-process__sticky{contain:paint;overflow:hidden}
+
+  /* Titles/copy do not animate blur/scale. Stage swaps are intentionally tiny. */
+  .motion-v7 .cp-copy__scene,
+  .motion-v7 .cp-copy__scene.is-active,
+  .motion-v7 .cp-copy__scene:not(.is-active){
+    filter:none!important;
+    animation:none!important;
+    transition:none!important;
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+  }
+  .motion-v7 .cp-copy__scene h1,
+  .motion-v7 .cp-copy__scene h2,
+  .motion-v7 .cp-copy__scene .cp-copy__foot{
+    filter:none!important;
+    animation:none!important;
+    transition:none!important;
+    text-shadow:none!important;
+  }
+
+  /* Kill decorative work while the hero is pinned. */
+  .motion-v7 .cp-ambient,
+  .motion-v7 .cp-image:before,
+  .motion-v7 .cp-image:after,
+  .motion-v7 .cp-scene-image:before,
+  .motion-v7 .cp-scene-image:after{display:none!important}
+  .motion-v7 .cp-scene-image,
+  .motion-v7 .cp-scene-image img,
+  .motion-v7 .cp-image,
+  .motion-v7 .cp-image img{
+    filter:none!important;
+    animation:none!important;
+    transition:none!important;
+    box-shadow:none!important;
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+  }
+  .motion-v7 .cp-main-cta,
+  .motion-v7 .cp-dev-times,
+  .motion-v7 .cp-mobile-review{
+    filter:none!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+    animation:none!important;
+    transition:none!important;
+  }
+}
