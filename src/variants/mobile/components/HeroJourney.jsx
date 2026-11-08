@@ -251,11 +251,7 @@ export default function HeroJourney(){
       if(mobile && !mobileStaticApplied){
         const firstTitle=el.querySelector('.cp-copy__scene--0 h1');
         if(firstTitle){
-<<<<<<< HEAD
-          el.style.setProperty('height','210svh','important');
-=======
           el.style.setProperty('height','270svh','important');
->>>>>>> 83ff257 (Improve mobile hero scroll experience)
           sceneParts.forEach(({scene,image},index)=>{
             scene.style.setProperty('z-index',String(10+index),'important');
             scene.style.setProperty('visibility','visible','important');
