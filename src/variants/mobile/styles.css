@@ -3250,6 +3250,61 @@ footer.rf-footer,footer{
 .work-cinema.project-orbit-showcase{background:linear-gradient(160deg,#020403,#0a100f 56%,#040705)!important}
 .statement.section{background:linear-gradient(145deg,#101817,#0b1110 58%,#070b0a)!important}
 .minimal-cta{background:linear-gradient(145deg,#0b1110,#070b0a 68%,#020403)!important}}
+
+/* Mobile services: keep the artwork in normal flow so transparent PNG/WebP
+   compositions cannot collapse into thin slivers inside an absolute grid. */
+@media (max-width:900px){
+  .services-preview.services-fullscreen{
+    min-height:auto!important;
+    overflow:visible!important;
+    padding:58px 18px 56px!important;
+  }
+  .services-preview .services-mobile-list{
+    display:grid!important;
+    gap:34px!important;
+    width:100%!important;
+  }
+  .services-preview .service-mobile-card,
+  .services-preview .service-mobile-card:hover,
+  .services-preview .service-mobile-card:focus-within{
+    display:grid!important;
+    grid-template-rows:auto auto!important;
+    gap:14px!important;
+    min-height:0!important;
+    height:auto!important;
+    overflow:visible!important;
+    opacity:1!important;
+    transform:none!important;
+    filter:none!important;
+    transition:none!important;
+  }
+  .services-preview .service-mobile-card picture{display:none!important}
+  .services-preview .service-mobile-card .service-mobile-art{
+    position:relative!important;
+    inset:auto!important;
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    aspect-ratio:1 / 1.08!important;
+    object-fit:contain!important;
+    object-position:center!important;
+    transform:none!important;
+    animation:none!important;
+    filter:drop-shadow(0 18px 24px rgba(78,56,31,.14))!important;
+  }
+  .services-preview .service-mobile-card>div{
+    position:static!important;
+    padding:0 4px!important;
+  }
+}
+
+/* Final position tweak for the mobile Google review card. */
+@media (max-width:699px){
+  html body .motion-v7.cinematic-process--three .cp-copy__scene--0 .cp-google-review{
+    top:calc(48% + var(--mobile-image-height) + 3%)!important;
+  }
+}
 .motion-v7 .cinematic-process__sticky{
   background:
     radial-gradient(68% 76% at 78% 42%,rgba(79,179,197,.18),transparent 58%),
@@ -7571,7 +7626,7 @@ html body .motion-v7.cinematic-process--three .cp-copy__scene--0 .cp-review-avat
   }
   html body .motion-v7.cinematic-process--three .cp-copy__scene--0 .cp-google-review{
     display:block!important;
-    top:calc(48% + var(--mobile-image-height) + 12px)!important;
+    top:calc(48% + var(--mobile-image-height) + 3%)!important;
     margin:0!important;
   }
 }
@@ -8286,7 +8341,7 @@ body .work-cinema.project-orbit-showcase .project-orbit-heading span{
 
 /* MOBILE HERO — maximum-light compositor path (physical devices) */
 @media (max-width:699px){
-  .motion-v7.cinematic-process--three{height:210svh!important;contain:layout paint style}
+  .motion-v7.cinematic-process--three{height:270svh!important;contain:layout paint style}
   .motion-v7 .cinematic-process__sticky{contain:paint;overflow:hidden}
 
   /* Titles/copy do not animate blur/scale. Stage swaps are intentionally tiny. */
@@ -8308,6 +8363,23 @@ body .work-cinema.project-orbit-showcase .project-orbit-heading span{
     text-shadow:none!important;
   }
 
+  .motion-v7 .cp-mobile-progress{
+    position:absolute;right:18px;top:50%;z-index:20;display:flex;flex-direction:column;
+    align-items:center;gap:7px;transform:translateY(-50%);pointer-events:none;
+  }
+  .motion-v7 .cp-mobile-progress__label{
+    writing-mode:vertical-rl;transform:rotate(180deg);margin-bottom:8px;
+    color:rgba(215,226,240,.52);font:500 7px/1 "DM Mono";letter-spacing:.16em;
+  }
+  .motion-v7 .cp-mobile-progress i{
+    display:block;width:2px;height:22px;border-radius:99px;background:rgba(255,255,255,.22);
+    transition:background .28s ease,height .28s ease;will-change:height,background;
+  }
+  .motion-v7[data-stage="0"] .cp-mobile-progress i:nth-of-type(1),
+  .motion-v7[data-stage="1"] .cp-mobile-progress i:nth-of-type(2),
+  .motion-v7[data-stage="2"] .cp-mobile-progress i:nth-of-type(3){
+    height:38px;background:var(--lime);
+  }
   /* Kill decorative work while the hero is pinned. */
   .motion-v7 .cp-ambient,
   .motion-v7 .cp-image:before,
@@ -8364,3 +8436,201 @@ body .work-cinema.project-orbit-showcase .project-orbit-heading span{
 @media (prefers-reduced-motion:reduce){
   .motion-v7 .cp-copy__scene.is-active .cp-title-write{animation:none!important}
 }
+<<<<<<< HEAD
+=======
+
+/* Final mobile services override: this must stay after the legacy visual passes. */
+@media (max-width:900px){
+  .services-preview.services-fullscreen{min-height:auto!important;overflow:visible!important;padding:58px 18px 56px!important}
+  .services-preview .services-mobile-list{display:grid!important;gap:18px!important;width:100%!important}
+  .services-preview .service-mobile-card,
+  .services-preview .service-mobile-card:hover,
+  .services-preview .service-mobile-card:focus-within{
+    position:relative!important;display:grid!important;grid-template-columns:1fr!important;align-items:stretch!important;gap:12px!important;
+    min-height:0!important;height:auto!important;overflow:visible!important;opacity:1!important;transform:none!important;
+    filter:none!important;animation:none!important;transition:none!important;
+  }
+  .services-preview .service-mobile-card picture{display:none!important}
+  .services-preview .service-mobile-card .service-mobile-art{
+    position:relative!important;inset:auto!important;display:block!important;width:100%!important;height:auto!important;
+    min-height:0!important;aspect-ratio:1 / 1.02!important;object-fit:contain!important;object-position:center!important;
+    transform:none!important;animation:none!important;filter:drop-shadow(0 18px 24px rgba(78,56,31,.14))!important;
+  }
+  .services-preview .service-mobile-card>div{
+    position:static!important;left:auto!important;right:auto!important;bottom:auto!important;display:block!important;
+    padding:0 10px!important;margin:0!important;background:transparent!important;text-align:center!important;
+  }
+  .services-preview .service-mobile-card span{font-size:9px!important;margin-bottom:7px!important}
+  .services-preview .service-mobile-card h3{max-width:none!important;font-size:clamp(25px,7.5vw,34px)!important;line-height:.94!important;margin-bottom:9px!important}
+  .services-preview .service-mobile-card ul{justify-content:center!important;display:flex!important;flex-wrap:wrap!important;gap:5px 9px!important}
+  .services-preview .service-mobile-card li{font-size:8px!important;letter-spacing:.04em!important}
+}
+
+/* Mobile project showcase: readable heading and a larger, lighter project card. */
+@media (max-width:900px){
+  .work-cinema.project-orbit-showcase{
+    min-height:0!important;
+    padding:72px 10px 34px!important;
+    overflow:hidden!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-heading{
+    width:100%!important;
+    margin:0 auto 24px!important;
+    padding:0 8px!important;
+    overflow:visible!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-heading h2{
+    width:100%!important;
+    max-width:100%!important;
+    font-size:clamp(31px,9.2vw,42px)!important;
+    line-height:.98!important;
+    letter-spacing:-.055em!important;
+    white-space:normal!important;
+    overflow:visible!important;
+    text-wrap:balance!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-heading h2:after{
+    width:58%!important;
+    margin:14px auto 0!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-heading span{
+    max-width:330px!important;
+    margin:12px auto 0!important;
+    font-size:12px!important;
+    line-height:1.42!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-stage{
+    height:clamp(405px,108vw,500px)!important;
+    margin:0 -10px!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-card{
+    width:min(94vw,470px)!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-browser{
+    border-radius:12px!important;
+    box-shadow:0 18px 38px rgba(0,0,0,.28)!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-meta{
+    margin:8px 8px 0!important;
+    padding:12px 4px 0!important;
+    background:transparent!important;
+    border:0!important;
+    box-shadow:none!important;
+    gap:10px!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-count{
+    font-size:12px!important;
+    opacity:.7!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-name h3{font-size:17px!important}
+  .work-cinema.project-orbit-showcase .project-orbit-tags span{
+    padding:5px 8px!important;
+    font-size:7px!important;
+    background:rgba(255,255,255,.04)!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-view{
+    min-height:42px!important;
+    border-radius:999px!important;
+    font-size:11px!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-stage .project-orbit-card[data-pos="0"]{
+    position:relative!important;
+    top:auto!important;
+    left:auto!important;
+    z-index:6!important;
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    transform:none!important;
+    margin:auto!important;
+    filter:none!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-stage{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-ring{
+    position:relative!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    width:100%!important;
+    height:100%!important;
+    transform:none!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-ring .project-orbit-card[data-pos="0"]{
+    flex:0 0 auto!important;
+    width:min(94vw,470px)!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-stage .project-orbit-card[data-pos="0"] .project-orbit-browser{
+    position:relative!important;
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    width:100%!important;
+    aspect-ratio:1.52 / 1!important;
+    overflow:hidden!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-stage .project-orbit-card[data-pos="0"] .project-orbit-browser picture,
+  .work-cinema.project-orbit-showcase .project-orbit-stage .project-orbit-card[data-pos="0"] .project-orbit-browser img{
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+  }
+  /* Project info only: keep the carousel untouched, strengthen the mobile readout. */
+  .work-cinema.project-orbit-showcase .project-orbit-meta{
+    width:calc(100% - 28px)!important;
+    margin:14px auto 0!important;
+    padding:12px 8px 8px!important;
+    display:grid!important;
+    grid-template-columns:auto 1fr!important;
+    align-items:center!important;
+    gap:12px 16px!important;
+    text-align:left!important;
+    background:rgba(233,226,215,.08)!important;
+    border:1px solid rgba(233,226,215,.24)!important;
+    border-radius:10px!important;
+    box-shadow:none!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-count{
+    justify-content:flex-start!important;
+    font-size:16px!important;
+    color:#e9e2d7!important;
+    opacity:1!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-count b{font-size:21px!important;color:#e9e2d7!important}
+  .work-cinema.project-orbit-showcase .project-orbit-count span{color:#a7b3a9!important}
+  .work-cinema.project-orbit-showcase .project-orbit-name{text-align:right!important}
+  .work-cinema.project-orbit-showcase .project-orbit-name h3{
+    font-size:20px!important;
+    line-height:1!important;
+    color:#e9e2d7!important;
+    text-shadow:none!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-name p{
+    margin-top:5px!important;
+    color:#8fd0a8!important;
+    font-size:9px!important;
+    letter-spacing:.12em!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-dots{
+    grid-column:1/-1!important;
+    justify-content:center!important;
+    gap:9px!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-dots button{
+    width:10px!important;height:10px!important;border:1px solid rgba(255,255,255,.55)!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-tags{
+    grid-column:1/-1!important;
+    justify-content:center!important;
+    gap:7px!important;
+  }
+  .work-cinema.project-orbit-showcase .project-orbit-tags span{
+    color:#dce9df!important;
+    border-color:rgba(151,214,180,.28)!important;
+    background:rgba(255,255,255,.035)!important;
+  }
+}
+>>>>>>> 83ff257 (Improve mobile hero scroll experience)

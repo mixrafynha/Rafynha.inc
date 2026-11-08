@@ -128,7 +128,16 @@ export default function ServicesPreview() {
     </div>}
     {isMobile && <div className="services-mobile-list" aria-label="Web design, SEO, website development and brand direction services">
       {serviceVisuals.map((service,i)=><article key={service.src} className="service-mobile-card" style={{'--service-i':i}}>
-        <ServiceImage service={service} eager={i===0} />
+        <img
+          className="service-mobile-art"
+          src={service.mobileSrc}
+          alt={service.alt}
+          loading={i===0 ? 'eager' : 'lazy'}
+          fetchPriority={i===0 ? 'high' : 'auto'}
+          decoding="async"
+          width="768"
+          height="1365"
+        />
         <div>
           <span>0{i+1}</span>
           <h3>{service.title}</h3>

@@ -135,7 +135,7 @@ export default function HeroJourney(){
       const current=snap?p:smooth.current;
       const scaled=current*3;
       const s=mobile
-        ? (current<.25?0:(current<.70?1:2))
+        ? (current<.333?0:(current<.666?1:2))
         : Math.min(2,Math.floor(Math.min(scaled,2.9999)));
       if(mobile){
         const scenes=sceneNodes;
@@ -143,8 +143,10 @@ export default function HeroJourney(){
         // scene only. No blur, clip-path, scale, opacity animation or trailing
         // smoothing loop. This keeps each scroll frame cheap on mobile GPUs.
         const smoothstep=(v)=>v*v*(3-2*v);
-        const first=smoothstep(clamp((current-.08)/.18));
-        const second=smoothstep(clamp((current-.50)/.18));
+        // Keep a generous overlap between scenes so a finger drag feels like
+        // one continuous handoff instead of three abrupt page swaps.
+        const first=smoothstep(clamp((current-.20)/.26));
+        const second=smoothstep(clamp((current-.53)/.26));
         const progress=[1,first,second];
         const vh=metrics.vh;
 
@@ -249,7 +251,11 @@ export default function HeroJourney(){
       if(mobile && !mobileStaticApplied){
         const firstTitle=el.querySelector('.cp-copy__scene--0 h1');
         if(firstTitle){
+<<<<<<< HEAD
           el.style.setProperty('height','210svh','important');
+=======
+          el.style.setProperty('height','270svh','important');
+>>>>>>> 83ff257 (Improve mobile hero scroll experience)
           sceneParts.forEach(({scene,image},index)=>{
             scene.style.setProperty('z-index',String(10+index),'important');
             scene.style.setProperty('visibility','visible','important');
@@ -484,6 +490,10 @@ export default function HeroJourney(){
         </div>
       </div>
 
+      {isMobile && <div className="cp-mobile-progress" aria-hidden="true">
+        <span className="cp-mobile-progress__label">SCROLL TO EXPLORE</span>
+        <i/><i/><i/>
+      </div>}
       {false && isMobile && <div className={`cp-mobile-review ${stage===0?'is-visible':''}`} aria-label="Client review">
         <img src={reviews[reviewIndex].avatar} alt={`${reviews[reviewIndex].name} avatar`} width="42" height="42" loading="lazy" decoding="async"/>
         <div>

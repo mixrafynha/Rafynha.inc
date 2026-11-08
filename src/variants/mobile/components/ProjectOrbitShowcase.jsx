@@ -126,7 +126,6 @@ export default function ProjectOrbitShowcase() {
       <div className="project-orbit-tags"><span>Web Design</span><span>Development</span><span>SEO</span><span>Performance</span></div>
       <button className="project-orbit-view" type="button" onClick={()=>setActive(showcaseProject)}>View Project <b>→</b></button>
     </div>
-    <div className="work-end"><p>DESIGN · CODE · IMPACT</p><h2>YOUR TURN.</h2><Link to="/contact">START A PROJECT ↗</Link></div>
     {active && <Suspense fallback={null}><ProjectModal project={active} onClose={()=>setActive(null)}/></Suspense>}
   </section>;
 }
